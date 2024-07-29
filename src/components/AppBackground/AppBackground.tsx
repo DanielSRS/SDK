@@ -1,14 +1,13 @@
 import React from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
+import { useColors } from '../../hooks/useColors';
 
 export const AppBackground = ({ children }: { children: React.ReactNode }) => {
   const currentTheme = useColorScheme();
+  const colors = useColors();
   const isDark = currentTheme === 'dark';
-  // const statusbarHeight = StatusBar.currentHeight;
-  const backgroundColor = isDark
-    ? styles.darkBackground
-    : styles.lightBackground;
+  const backgroundColor = { backgroundColor: colors.appBackground };
 
   return (
     <View
@@ -30,11 +29,5 @@ export const AppBackground = ({ children }: { children: React.ReactNode }) => {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-  },
-  lightBackground: {
-    backgroundColor: '#F3F3F3',
-  },
-  darkBackground: {
-    backgroundColor: '#333',
   },
 });
