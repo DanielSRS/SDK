@@ -3,7 +3,7 @@ import { createContext } from '../../libs';
 import type { ColorValue } from 'react-native';
 import type { ReactNode, FC } from 'react';
 
-type ColorTokens = 'appBackground' | 'appForeground';
+type ColorTokens = 'appBackground' | 'appForeground' | 'textPrimary';
 
 type Colors = {
   readonly [key in ColorTokens]: ColorValue;
@@ -36,8 +36,10 @@ export const ColorsProvider: FC<{ children: ReactNode }> = ({ children }) => {
 const DEFAULT_LIGHT_COLORS: Colors = {
   appBackground: '#FFFFFF',
   appForeground: '#000000',
+  textPrimary: '#000000E4',
 };
 const DEFAULT_DARK_COLORS: Colors = {
   appBackground: '#000000',
   appForeground: '#FFFFFF',
+  textPrimary: '#FFFFFF',
 };

@@ -1,45 +1,63 @@
-import { useState, useEffect, StrictMode } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StrictMode } from 'react';
 import {
-  multiply,
+  StyleSheet,
+  View,
+  Button,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
+import {
   SdkProvider,
-  useColors,
   useSchemeControl,
+  Body,
+  Caption,
+  BodyStrong,
+  BodyLarge,
+  Subtitle,
+  Title,
+  TitleLarge,
+  Display,
 } from 'react-native-sdk';
 
 export function Test() {
-  const [result, setResult] = useState<number | undefined>();
-  const { setAppColorScheme, appColorScheme } = useSchemeControl();
-  const colors = useColors();
-  const textColor = { color: colors.appForeground };
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const { setAppColorScheme } = useSchemeControl();
 
   return (
-    <View style={styles.container}>
-      <Text style={textColor}>Result: {result}</Text>
-      <Text style={textColor}>fasdf: {appColorScheme}</Text>
-      <Button
-        title="dark"
-        onPress={() => {
-          setAppColorScheme('dark');
-        }}
-      />
-      <Button
-        title="light"
-        onPress={() => {
-          setAppColorScheme('light');
-        }}
-      />
-      <Button
-        title="system"
-        onPress={() => {
-          setAppColorScheme('system');
-        }}
-      />
-    </View>
+    <ScrollView style={styles.pageContainer}>
+      <SafeAreaView>
+        <View style={styles.container}>
+          {/* Text components */}
+          <View>
+            <Caption>Caption</Caption>
+            <Body>Body</Body>
+            <BodyStrong>Body Strong</BodyStrong>
+            <BodyLarge>Body Large</BodyLarge>
+            <Subtitle>Subtitle</Subtitle>
+            <Title>Title</Title>
+            <TitleLarge>TitleLarge</TitleLarge>
+            <Display>Display</Display>
+          </View>
+          <Button
+            title="dark"
+            onPress={() => {
+              setAppColorScheme('dark');
+            }}
+          />
+          <Button
+            title="light"
+            onPress={() => {
+              setAppColorScheme('light');
+            }}
+          />
+          <Button
+            title="system"
+            onPress={() => {
+              setAppColorScheme('system');
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -55,13 +73,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  pageContainer: {
+    flex: 1,
   },
 });
