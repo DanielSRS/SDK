@@ -1,11 +1,5 @@
 import { StrictMode } from 'react';
-import {
-  StyleSheet,
-  View,
-  Button,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
+import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import {
   SdkProvider,
   useSchemeControl,
@@ -13,6 +7,7 @@ import {
   Caption,
   BodyStrong,
   BodyLarge,
+  Button,
   Subtitle,
   Title,
   TitleLarge,
@@ -24,9 +19,31 @@ export function Test() {
   const { setAppColorScheme } = useSchemeControl();
 
   return (
-    <ScrollView style={styles.pageContainer}>
-      <SafeAreaView>
+    <SafeAreaView style={styles.pageContainer}>
+      <ScrollView style={styles.pageContainer}>
         <View style={styles.container}>
+          {/* Color scheme control */}
+          <View>
+            <Button
+              onPress={() => {
+                setAppColorScheme('dark');
+              }}>
+              Dark
+            </Button>
+            <Button
+              onPress={() => {
+                setAppColorScheme('light');
+              }}>
+              Light
+            </Button>
+            <Button
+              onPress={() => {
+                setAppColorScheme('system');
+              }}>
+              System
+            </Button>
+          </View>
+
           {/* Text components */}
           <View style={styles.textGroup}>
             <Caption>Caption</Caption>
@@ -62,27 +79,51 @@ export function Test() {
               <Checkbox value={undefined} disabled label={'Text'} />
             </View>
           </View>
-          <Button
-            title="dark"
-            onPress={() => {
-              setAppColorScheme('dark');
-            }}
-          />
-          <Button
-            title="light"
-            onPress={() => {
-              setAppColorScheme('light');
-            }}
-          />
-          <Button
-            title="system"
-            onPress={() => {
-              setAppColorScheme('system');
-            }}
-          />
+
+          {/* Button */}
+          <View style={styles.buttonGroup}>
+            {/* Text only */}
+            <Button>Text</Button>
+            <Button disabled>Text</Button>
+            <Button accent={false}>Text</Button>
+            <Button disabled accent={false}>
+              Text
+            </Button>
+            {/* Text + icon on right */}
+            <Button icon>Text</Button>
+            <Button icon disabled>
+              Text
+            </Button>
+            <Button icon accent={false}>
+              Text
+            </Button>
+            <Button icon disabled accent={false}>
+              Text
+            </Button>
+            {/* Text + icon on left */}
+            <Button icon showIconOnLeft>
+              Text
+            </Button>
+            <Button icon showIconOnLeft disabled>
+              Text
+            </Button>
+            <Button icon showIconOnLeft accent={false}>
+              Text
+            </Button>
+            <Button icon showIconOnLeft disabled accent={false}>
+              Text
+            </Button>
+            {/* icon only */}
+            <Button icon showIconOnLeft />
+            <Button icon showIconOnLeft disabled />
+            <Button icon showIconOnLeft accent={false} />
+            <Button icon showIconOnLeft disabled accent={false} />
+            {}
+            {}
+          </View>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -111,6 +152,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   checkboxGroup: {
+    gap: 10,
+  },
+  buttonGroup: {
     gap: 10,
   },
 });

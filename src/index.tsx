@@ -10,6 +10,7 @@ export { Title } from './components/Text/Title';
 export { TitleLarge } from './components/Text/TitleLarge';
 export { Display } from './components/Text/Display';
 export { Checkbox } from './components/Checkbox';
+export { Button } from './components/Button';
 
 export function multiply(a: number, b: number): Promise<number> {
   return Promise.resolve(a * b);

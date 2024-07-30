@@ -20,6 +20,13 @@ type ColorTokens =
   | 'accentDisabled'
   | 'textOnAccentDisabled'
   | 'textDisabled'
+  | 'fillColorControlDefault'
+  | 'fillColorControlSecondary'
+  | 'fillColorControlTertiary'
+  | 'fillColorTextPrimary'
+  | 'fillColorTextSecondary'
+  | 'fillColorControlDisabled'
+  | 'fillColorTextDisabled'
   | 'controlAltSecondary';
 
 type Colors = {
@@ -68,6 +75,13 @@ const DEFAULT_LIGHT_COLORS: Colors = {
   accentDisabled: 'rgba(0, 0, 0, 0.2169)',
   textOnAccentDisabled: '#FFFFFF',
   textDisabled: 'rgba(0, 0, 0, 0.3628)',
+  fillColorControlDefault: 'rgba(255, 255, 255, 0.7)',
+  fillColorControlSecondary: 'rgba(249, 249, 249, 0.5)',
+  fillColorTextPrimary: 'rgba(0, 0, 0, 0.8956)',
+  fillColorControlTertiary: 'rgba(249, 249, 249, 0.3)',
+  fillColorTextSecondary: 'rgba(0, 0, 0, 0.6063)',
+  fillColorControlDisabled: 'rgba(249, 249, 249, 0.3)',
+  fillColorTextDisabled: 'rgba(0, 0, 0, 0.3614)',
 };
 const DEFAULT_DARK_COLORS: Colors = {
   appBackground: '#000000',
@@ -87,4 +101,11 @@ const DEFAULT_DARK_COLORS: Colors = {
   accentDisabled: 'rgba(255, 255, 255, 0.1581)',
   textOnAccentDisabled: 'rgba(255, 255, 255, 0.5302)',
   textDisabled: 'rgba(255, 255, 255, 0.3628)',
+  fillColorControlDefault: 'rgba(255, 255, 255, 0.0605)',
+  fillColorControlSecondary: 'rgba(255, 255, 255, 0.0837)',
+  fillColorTextPrimary: 'rgba(255, 255, 255, 1)',
+  fillColorControlTertiary: 'rgba(255, 255, 255, 0.0323)',
+  fillColorTextSecondary: 'rgba(255, 255, 255, 0.786)',
+  fillColorControlDisabled: 'rgba(255, 255, 255, 0.0419)',
+  fillColorTextDisabled: 'rgba(255, 255, 255, 0.3628)',
 };
