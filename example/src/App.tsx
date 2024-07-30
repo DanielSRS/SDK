@@ -17,6 +17,7 @@ import {
   Title,
   TitleLarge,
   Display,
+  Checkbox,
 } from 'react-native-sdk';
 
 export function Test() {
@@ -27,7 +28,7 @@ export function Test() {
       <SafeAreaView>
         <View style={styles.container}>
           {/* Text components */}
-          <View>
+          <View style={styles.textGroup}>
             <Caption>Caption</Caption>
             <Body>Body</Body>
             <BodyStrong>Body Strong</BodyStrong>
@@ -36,6 +37,30 @@ export function Test() {
             <Title>Title</Title>
             <TitleLarge>TitleLarge</TitleLarge>
             <Display>Display</Display>
+          </View>
+
+          {/* Checkbox */}
+          <View style={styles.checkboxGroupContainer}>
+            <View style={styles.checkboxGroup}>
+              <Checkbox value={false} label={' '} />
+              <Checkbox value={true} label={' '} />
+              <Checkbox value={undefined} label={' '} />
+            </View>
+            <View style={styles.checkboxGroup}>
+              <Checkbox value={false} disabled label={' '} />
+              <Checkbox value={true} disabled label={' '} />
+              <Checkbox value={undefined} disabled label={' '} />
+            </View>
+            <View style={styles.checkboxGroup}>
+              <Checkbox value={false} label={'Text'} />
+              <Checkbox value={true} label={'Text'} />
+              <Checkbox value={undefined} label={'Text'} />
+            </View>
+            <View style={styles.checkboxGroup}>
+              <Checkbox value={false} disabled label={'Text'} />
+              <Checkbox value={true} disabled label={'Text'} />
+              <Checkbox value={undefined} disabled label={'Text'} />
+            </View>
           </View>
           <Button
             title="dark"
@@ -78,5 +103,14 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
+  },
+
+  // groups
+  textGroup: {},
+  checkboxGroupContainer: {
+    flexDirection: 'row',
+  },
+  checkboxGroup: {
+    gap: 10,
   },
 });

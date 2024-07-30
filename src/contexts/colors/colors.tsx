@@ -3,7 +3,24 @@ import { createContext } from '../../libs';
 import type { ColorValue } from 'react-native';
 import type { ReactNode, FC } from 'react';
 
-type ColorTokens = 'appBackground' | 'appForeground' | 'textPrimary';
+type ColorTokens =
+  | 'appBackground'
+  | 'appForeground'
+  | 'textPrimary'
+  | 'controlStrongStrokeDefault'
+  | 'accentDefault'
+  | 'textOnAccentPrimary'
+  | 'controlAltTertiary'
+  | 'accentSecondary'
+  | 'controlAltQuarternary'
+  | 'controlStrongStrokeDisabled'
+  | 'accentTertiary'
+  | 'textOnAccentSecondary'
+  | 'controlAltDisabled'
+  | 'accentDisabled'
+  | 'textOnAccentDisabled'
+  | 'textDisabled'
+  | 'controlAltSecondary';
 
 type Colors = {
   readonly [key in ColorTokens]: ColorValue;
@@ -37,9 +54,37 @@ const DEFAULT_LIGHT_COLORS: Colors = {
   appBackground: '#FFFFFF',
   appForeground: '#000000',
   textPrimary: '#000000E4',
+  controlAltSecondary: 'rgba(0, 0, 0, 0.0241)',
+  controlStrongStrokeDefault: 'rgba(0, 0, 0, 0.6063)',
+  accentDefault: '#005FB8',
+  textOnAccentPrimary: '#FFFFFF',
+  controlAltTertiary: 'rgba(0, 0, 0, 0.0578)',
+  accentSecondary: 'rgba(0, 95, 184, 0.9)',
+  controlAltQuarternary: 'rgba(0, 0, 0, 0.0924)',
+  controlStrongStrokeDisabled: 'rgba(0, 0, 0, 0.2169)',
+  accentTertiary: 'rgba(0, 95, 184, 0.8)',
+  textOnAccentSecondary: 'rgba(255, 255, 255, 0.7)',
+  controlAltDisabled: 'rgba(255, 255, 255, 0)',
+  accentDisabled: 'rgba(0, 0, 0, 0.2169)',
+  textOnAccentDisabled: '#FFFFFF',
+  textDisabled: 'rgba(0, 0, 0, 0.3628)',
 };
 const DEFAULT_DARK_COLORS: Colors = {
   appBackground: '#000000',
   appForeground: '#FFFFFF',
   textPrimary: '#FFFFFF',
+  controlAltSecondary: 'rgba(0, 0, 0, 0.1)',
+  controlStrongStrokeDefault: 'rgba(255, 255, 255, 0.6047)',
+  accentDefault: '#60CDFF',
+  textOnAccentPrimary: '#000000',
+  controlAltTertiary: 'rgba(0, 0, 0, 0.0419)',
+  accentSecondary: 'rgba(96, 205, 255, 0.9)',
+  controlAltQuarternary: 'rgba(255, 255, 255, 0.0698)',
+  controlStrongStrokeDisabled: 'rgba(255, 255, 255, 0.1581)',
+  accentTertiary: 'rgba(96, 205, 255, 0.8)',
+  textOnAccentSecondary: 'rgba(0, 0, 0, 0.5)',
+  controlAltDisabled: 'rgba(255, 255, 255, 0)',
+  accentDisabled: 'rgba(255, 255, 255, 0.1581)',
+  textOnAccentDisabled: 'rgba(255, 255, 255, 0.5302)',
+  textDisabled: 'rgba(255, 255, 255, 0.3628)',
 };

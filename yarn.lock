@@ -12549,6 +12549,7 @@ __metadata:
     react-native-builder-bob: ^0.28.1
     release-it: ^15.0.0
     scheduler: ^0.23.2
+    ts-pattern: ^5.2.0
     typescript: ^5.2.2
     use-context-selector: ^2.0.0
   peerDependencies:
@@ -14455,6 +14456,13 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: fde256c9073969e234526e2cfead42591b9a2aec5222bac154b0de2fa9e4ceb30efcd717ee8bc785a56f3a119bdd5aa27b333d9dbec94ed254bd26f8944c67ac
+  languageName: node
+  linkType: hard
+
+"ts-pattern@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "ts-pattern@npm:5.2.0"
+  checksum: 551ee37e76772853c96d2942af1cfaeab3b457f2d226849d806605e2b3a7bb368c0f749df582f8fa8995f0e02f3618192eb4d6d9b231cbd01dc9e4cb62af3472
   languageName: node
   linkType: hard
 

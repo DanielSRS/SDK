@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "scheduler": "^0.23.2",
+    "ts-pattern": "^5.2.0",
     "use-context-selector": "^2.0.0"
   },
   "devDependencies": {
