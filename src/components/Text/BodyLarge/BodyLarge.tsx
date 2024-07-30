@@ -6,7 +6,7 @@ export function BodyLarge(props: TextProps) {
   const colors = useColors();
   const textColor = { color: colors.textPrimary };
 
-  return <Text {...props} style={[defaultStyles, props.style, textColor]} />;
+  return <Text {...props} style={[defaultStyles, textColor, props.style]} />;
 }
 
 const defaultStyles: StyleProp<TextStyle> = {
