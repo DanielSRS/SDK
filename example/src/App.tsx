@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useState } from 'react';
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import {
   SdkProvider,
@@ -13,6 +13,7 @@ import {
   TitleLarge,
   Display,
   Checkbox,
+  Slider,
 } from 'react-native-sdk';
 
 export function Test() {
@@ -23,7 +24,7 @@ export function Test() {
       <ScrollView style={styles.pageContainer}>
         <View style={styles.container}>
           {/* Color scheme control */}
-          <View>
+          <View style={styles.themeSwitchGroup}>
             <Button
               onPress={() => {
                 setAppColorScheme('dark');
@@ -42,6 +43,18 @@ export function Test() {
               }}>
               System
             </Button>
+          </View>
+
+          {/* Slider */}
+          <View style={styles.sliderGroup}>
+            {/* <Body>{`Value: ${s} %`}</Body>
+            <Slider
+              maximumValue={100}
+              onValueChange={f => {
+                b(f.toFixed(0));
+              }}
+            /> */}
+            <Sl />
           </View>
 
           {/* Text components */}
@@ -137,6 +150,21 @@ export default function App() {
   );
 }
 
+const Sl = () => {
+  const [s, b] = useState('0');
+  return (
+    <>
+      <Body>{`Value: ${s} %`}</Body>
+      <Slider
+        maximumValue={100}
+        onValueChange={f => {
+          b(f.toFixed(0));
+        }}
+      />
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
@@ -147,14 +175,26 @@ const styles = StyleSheet.create({
   },
 
   // groups
-  textGroup: {},
+  themeSwitchGroup: {
+    // display: 'none',
+  },
+  textGroup: {
+    // display: 'none',
+  },
   checkboxGroupContainer: {
     flexDirection: 'row',
   },
   checkboxGroup: {
     gap: 10,
+    // display: 'none',
   },
   buttonGroup: {
     gap: 10,
+    // display: 'none',
+  },
+  sliderGroup: {
+    gap: 10,
+    paddingVertical: 30,
+    paddingHorizontal: 30,
   },
 });
