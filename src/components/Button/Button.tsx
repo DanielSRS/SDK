@@ -10,7 +10,7 @@ import type {
   ViewStyle,
 } from 'react-native';
 
-interface ButtonProps extends PressableProps {
+export interface ButtonProps extends PressableProps {
   children?: string;
   style?: StyleProp<ViewStyle>;
   accent?: boolean;

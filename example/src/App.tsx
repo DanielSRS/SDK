@@ -14,6 +14,7 @@ import {
   Display,
   Checkbox,
   Slider,
+  ToggleButton,
 } from 'react-native-sdk';
 
 export function Test() {
@@ -131,6 +132,30 @@ export function Test() {
             <Button icon showIconOnLeft disabled />
             <Button icon showIconOnLeft accent={false} />
             <Button icon showIconOnLeft disabled accent={false} />
+            {}
+            {}
+          </View>
+
+          {/* Toggle button */}
+          <View style={styles.buttonGroup}>
+            {/* Text only */}
+            <ToggleButton>Toggle</ToggleButton>
+            <ToggleButton disabled>Text</ToggleButton>
+            {/* Text + icon on right */}
+            <ToggleButton icon>Text</ToggleButton>
+            <ToggleButton icon disabled>
+              Text
+            </ToggleButton>
+            {/* Text + icon on left */}
+            <ToggleButton icon showIconOnLeft>
+              Text
+            </ToggleButton>
+            <ToggleButton icon showIconOnLeft disabled>
+              Text
+            </ToggleButton>
+            {/* icon only */}
+            <ToggleButton icon showIconOnLeft />
+            <ToggleButton icon showIconOnLeft disabled />
             {}
             {}
           </View>
