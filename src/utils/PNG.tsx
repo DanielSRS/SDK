@@ -65,7 +65,7 @@ function test() {
   const pngFile = png(pngW, pngH, pngData);
   const a3 = Date.now();
 
-  const base64png = Base64.encode(pngFile);
+  const base64png = Base64.fromBinaryString(pngFile);
   const a4 = Date.now();
   dataUrl += base64png;
   const a5 = Date.now();

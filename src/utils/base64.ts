@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /**
  *
  *  Base64 encode / decode
@@ -44,5 +45,14 @@ export const Base64 = {
     }
 
     return output;
+  },
+
+  fromBinaryString: function (data: string) {
+    if (btoa) {
+      console.log('btoa');
+      return btoa(data);
+    }
+
+    return this.encode(data);
   },
 };
