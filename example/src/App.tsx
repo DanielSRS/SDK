@@ -15,6 +15,7 @@ import {
   Checkbox,
   Slider,
   ToggleButton,
+  PNG,
 } from 'react-native-sdk';
 
 export function Test() {
@@ -165,11 +166,29 @@ export function Test() {
   );
 }
 
+export function PngTest() {
+  const s = {
+    justifyContent: 'space-between',
+    flex: 1,
+  } as const;
+  return (
+    <SafeAreaView style={styles.pageContainer}>
+      {/* <ScrollView style={styles.pageContainer}> */}
+      <View style={[styles.container, s]}>
+        {}
+        <PNG />
+        {}
+      </View>
+      {/* </ScrollView> */}
+    </SafeAreaView>
+  );
+}
+
 export default function App() {
   return (
     <StrictMode>
       <SdkProvider>
-        <Test />
+        <PngTest />
       </SdkProvider>
     </StrictMode>
   );

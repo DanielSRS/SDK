@@ -13,6 +13,7 @@ export { Checkbox } from './components/Checkbox';
 export { Button } from './components/Button';
 export { Slider } from './components/Slider';
 export { ToggleButton } from './components/ToggleButton';
+export { PNG } from './utils/PNG';
 
 export function multiply(a: number, b: number): Promise<number> {
   return Promise.resolve(a * b);
