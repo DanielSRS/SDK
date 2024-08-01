@@ -2,10 +2,10 @@
 import { Image, View } from 'react-native';
 import { Button } from '../components/Button';
 import { Body } from '../components/Text/Body';
-import { createRainbowBall } from './rainbolball';
 import { png } from './createPng';
 import { Base64 } from './base64';
 import { useState } from 'react';
+import { createCrossSectionofHSVCylinder } from './hsv';
 
 export function PNG() {
   const [img, setImg] = useState<{
@@ -55,13 +55,12 @@ export function PNG() {
 
 function test() {
   const RADIUS = 128;
-  const PHASES = 5;
   const pngW = 2 * RADIUS;
   const pngH = 2 * RADIUS;
   let dataUrl = 'data:image/png;base64,';
 
   const a1 = Date.now();
-  const pngData = createRainbowBall(RADIUS, PHASES);
+  const pngData = createCrossSectionofHSVCylinder(RADIUS, 1);
   const a2 = Date.now();
   const pngFile = png(pngW, pngH, pngData);
   const a3 = Date.now();
