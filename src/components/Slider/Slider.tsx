@@ -1,29 +1,9 @@
-import {
-  Animated,
-  Easing,
-  PanResponder,
-  Pressable,
-  StyleSheet,
-  View,
-  type GestureResponderEvent,
-  type LayoutChangeEvent,
-} from 'react-native';
-import { useColors } from '../../hooks/useColors';
+import { Animated, Easing, PanResponder } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useMemo, useRef, useState } from 'react';
-
-const interpolate = (
-  inputMin: number,
-  inputMax: number,
-  outputMin: number,
-  outputMax: number,
-  input: number
-) => {
-  const unclamped =
-    ((input - inputMin) * (outputMax - outputMin)) / (inputMax - inputMin) +
-    outputMin;
-  const clamped = Math.max(outputMin, Math.min(outputMax, unclamped));
-  return clamped;
-};
+import { interpolate } from '../../utils/linearInterpolation';
+import { useColors } from '../../hooks/useColors';
+import type { GestureResponderEvent, LayoutChangeEvent } from 'react-native';
 
 interface SliderProps {
   /**
