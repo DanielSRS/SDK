@@ -20,6 +20,17 @@ export function ColorPicker() {
     width: number;
     height: number;
   }>();
+  const [coordinates, setC] = useState({
+    dx: 0,
+    dy: 0,
+    dxOffset: 0,
+    dyOffset: 0,
+    x: 0,
+    y: 0,
+    isInTheCircle: true,
+    xLinha: 0,
+    yLinha: 0,
+  });
 
   // console.log({ ...selectorPosition.x });
 
@@ -40,6 +51,7 @@ export function ColorPicker() {
   const panResponder = useRef(
     PanResponder.create({
       onPanResponderGrant: () => {
+        console.log('onPanResponderGrant');
         selectorPosition.setOffset({
           x: (selectorPosition.x as any)._value,
           y: (selectorPosition.y as any)._value,
@@ -59,12 +71,30 @@ export function ColorPicker() {
         const dyOffset: number = (selectorPosition.y as any)._offset;
         const x = dx + dxOffset;
         const y = dy + dyOffset;
-        const isInTheCircle = x * x + y * y < radius * radius;
+
+        const xSqrt = x * x;
+        const ySqrt = y * y;
+        const isInTheCircle = xSqrt + ySqrt < radius * radius;
         // const x = Math.floor(gestureState.moveX);
         const n = {
           x: dx,
           y: dy,
         };
+        const distance = Math.sqrt(x * x + y * y);
+        const xLinha = (radius * x) / distance - dxOffset;
+        const yLinha = (radius * y) / distance - dyOffset;
+
+        setC({
+          dx,
+          dxOffset,
+          dy,
+          dyOffset,
+          isInTheCircle,
+          x,
+          y,
+          xLinha,
+          yLinha,
+        });
 
         console.log(
           JSON.stringify(
@@ -80,18 +110,11 @@ export function ColorPicker() {
         if (isInTheCircle) {
           selectorPosition.setValue(n);
         } else {
-          console.log('not in the circle');
+          selectorPosition.setValue({
+            x: xLinha,
+            y: yLinha,
+          });
         }
-        // Animated.event(
-        //   [
-        //     null,
-        //     {
-        //       dx: selectorPosition.x, // x,y are Animated.Value
-        //       dy: selectorPosition.y,
-        //     },
-        //   ],
-        //   { useNativeDriver: false }
-        // )(event, gestureState);
       },
     })
   ).current;
@@ -250,6 +273,16 @@ export function ColorPicker() {
 
       {/* Color */}
       <Body>{selectedColor}</Body>
+      <Body> </Body>
+      <Body>{`dx\t\t\t\t\t\t${coordinates.dx}`}</Body>
+      <Body>{`x\t\t\t\t\t\t${coordinates.x}`}</Body>
+      <Body>{`dy\t\t\t\t\t\t${coordinates.dy}`}</Body>
+      <Body>{`y\t\t\t\t\t\t${coordinates.y}`}</Body>
+      <Body>{`xLinha\t\t\t\t\t${coordinates.xLinha}`}</Body>
+      <Body>{`yLinha\t\t\t\t\t${coordinates.yLinha}`}</Body>
+      <Body>{`dxOffset\t\t\t\t\t${coordinates.dxOffset}`}</Body>
+      <Body>{`dyOffset\t\t\t\t${coordinates.dyOffset}`}</Body>
+      <Body>{`isInTheCircle\t\t\t\t${coordinates.isInTheCircle}`}</Body>
     </View>
   );
 }
