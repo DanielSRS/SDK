@@ -15,7 +15,7 @@ import {
   Checkbox,
   Slider,
   ToggleButton,
-  PNG,
+  ColorPicker,
 } from 'react-native-sdk';
 
 export function Test() {
@@ -176,7 +176,7 @@ export function PngTest() {
       {/* <ScrollView style={styles.pageContainer}> */}
       <View style={[styles.container, s]}>
         {}
-        <PNG />
+        <ColorPicker />
         {}
       </View>
       {/* </ScrollView> */}
