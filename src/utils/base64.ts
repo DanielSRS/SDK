@@ -56,7 +56,12 @@ export const Base64 = {
     return this.encode(data);
   },
 
-  fromUint8Array: base64ArrayBuffer,
+  fromUint8Array: (data: Uint8ClampedArray | Uint8Array) => {
+    if (btoa) {
+      return btoa(uint8ToString(data));
+    }
+    return base64ArrayBuffer(data);
+  },
 };
 
 function base64ArrayBuffer(bytes: Uint8ClampedArray | Uint8Array) {
@@ -115,4 +120,18 @@ function base64ArrayBuffer(bytes: Uint8ClampedArray | Uint8Array) {
   }
 
   return base64;
+}
+
+function uint8ToString(u8a: Uint8ClampedArray | Uint8Array) {
+  var CHUNK_SZ = 0x8000;
+  var c = [];
+  for (var i = 0; i < u8a.length; i += CHUNK_SZ) {
+    c.push(
+      String.fromCharCode.apply(
+        null,
+        u8a.subarray(i, i + CHUNK_SZ) as unknown as number[]
+      )
+    );
+  }
+  return c.join('');
 }
