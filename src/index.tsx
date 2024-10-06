@@ -14,6 +14,7 @@ export { Button } from './components/Button';
 export { Slider } from './components/Slider';
 export { ToggleButton } from './components/ToggleButton';
 export { ColorPicker } from './components/ColorPicker';
+export { pickFile } from './api/file-picker';
 
 export function multiply(a: number, b: number): Promise<number> {
   return Promise.resolve(a * b);

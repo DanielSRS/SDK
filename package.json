@@ -80,6 +80,7 @@
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-builder-bob": "^0.28.1",
+    "react-native-document-picker": "^9.1.0",
     "release-it": "^15.0.0",
     "typescript": "^5.2.2"
   },
@@ -88,7 +89,13 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-document-picker": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-native-document-picker": {
+      "optional": true
+    }
   },
   "workspaces": [
     "example"
