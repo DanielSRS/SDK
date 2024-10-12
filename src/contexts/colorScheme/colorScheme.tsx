@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useColorScheme } from 'react-native';
+import { Appearance, useColorScheme } from 'react-native';
 import { createContext } from '../../libs';
 import type { ColorSchemeName } from 'react-native';
 
@@ -16,6 +16,22 @@ type UserColorScheme = 'system' | 'light' | 'dark';
 
 export const ColorSchemeContext = createContext({} as ColorSchemeContextProps);
 
+const updateScheme =
+  (d: (c: UserColorScheme) => void) => (c: UserColorScheme) => {
+    switch (c) {
+      case 'dark':
+        Appearance.setColorScheme('dark');
+        break;
+      case 'light':
+        Appearance.setColorScheme('light');
+        break;
+      default:
+        Appearance.setColorScheme(null);
+        break;
+    }
+    d(c);
+  };
+
 const useColorSchemeData = (): ColorSchemeContextProps => {
   const systemColorScheme = useColorScheme() || 'light';
   const [appColorScheme, setAppColorScheme] =
@@ -26,7 +42,7 @@ const useColorSchemeData = (): ColorSchemeContextProps => {
   return {
     colorScheme,
     systemColorScheme,
-    setAppColorScheme,
+    setAppColorScheme: updateScheme(setAppColorScheme),
     appColorScheme,
   };
 };
