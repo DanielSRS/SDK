@@ -34,4 +34,4 @@ export function globalSdkProvider(Story: () => React.ReactNode) {
   );
 }
 
-const globalPaddingStyle = { padding: 20 } as const;
+const globalPaddingStyle = { padding: 20, flex: 1 } as const;
