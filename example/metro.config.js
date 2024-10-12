@@ -23,12 +23,12 @@ module.exports = withStorybook(config, {
   // you can also use a env variable to set this
   enabled: true,
   // Path to your storybook config
-  configPath: path.resolve(__dirname, './.storybook'),
+  configPath: path.resolve(__dirname, './.ondevice'),
 
   // Optional websockets configuration
   // Starts a websocket server on the specified port and host on metro start
-  websockets: {
-    port: 7007,
-    host: 'localhost',
-  },
+  // websockets: {
+  //   port: 7007,
+  //   host: 'localhost',
+  // },
 });

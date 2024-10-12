@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "storybook-generate": "sb-rn-get-stories"
+    "storybook-generate": "sb-rn-get-stories --config-path .ondevice"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
@@ -25,7 +25,9 @@
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-community/slider": "4.5.2",
     "@storybook/addon-ondevice-actions": "^8.3.6",
+    "@storybook/addon-ondevice-backgrounds": "^8.3.6",
     "@storybook/addon-ondevice-controls": "^8.3.6",
+    "@storybook/addon-ondevice-notes": "^8.3.6",
     "@storybook/react-native": "^8.3.6",
     "babel-loader": "^8.4.1",
     "react-native-builder-bob": "^0.28.1",
