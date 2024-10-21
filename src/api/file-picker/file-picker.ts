@@ -19,7 +19,7 @@ async function moduleLoader() {
     if (!isModuleRegistered) {
       return NoModuleFound;
     }
-    const r = await import('react-native-document-picker');
+    const r = require('react-native-document-picker');
     const GG = pickSinglebBuilder({
       lib: 'react-native-document-picker',
       pickSingle: r.pickSingle,
