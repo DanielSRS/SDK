@@ -18,7 +18,7 @@ export const AppBackground = (props: AppBackgroundProps) => {
     backgroundColor: colors.backgroundFillColorSolidBackgroundBase,
   };
 
-  const showBgColor = transparentBackground ?? !SUPORTS_WINDOW;
+  const showBgColor = !(transparentBackground ?? SUPORTS_WINDOW);
 
   return (
     <View
