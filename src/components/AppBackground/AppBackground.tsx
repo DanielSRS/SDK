@@ -1,20 +1,31 @@
 import React from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
 
-export const AppBackground = ({ children }: { children: React.ReactNode }) => {
+const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
+
+interface AppBackgroundProps {
+  children: React.ReactNode;
+  transparentBackground?: boolean;
+}
+export const AppBackground = (props: AppBackgroundProps) => {
+  const { children, transparentBackground } = props;
   const currentTheme = useColorScheme();
   const colors = useColors();
   const isDark = currentTheme === 'dark';
-  const backgroundColor = { backgroundColor: colors.appBackground };
+  const backgroundColor = {
+    backgroundColor: colors.backgroundFillColorSolidBackgroundBase,
+  };
+
+  const showBgColor = transparentBackground ?? !SUPORTS_WINDOW;
 
   return (
     <View
       style={[
         styles.appContainer,
         // { paddingTop: statusbarHeight },
-        backgroundColor,
+        showBgColor && backgroundColor,
       ]}>
       <StatusBar
         backgroundColor={'transparent'}
