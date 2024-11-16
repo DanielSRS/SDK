@@ -16,6 +16,7 @@ export { ToggleButton } from './components/ToggleButton';
 export { ColorPicker } from './components/ColorPicker';
 export { pickFile } from './api/file-picker';
 export { Styled } from './components/Styled';
+export { ZStack } from './components/ZStack/ZStack';
 
 export function multiply(a: number, b: number): Promise<number> {
   return Promise.resolve(a * b);
