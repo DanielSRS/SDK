@@ -10,6 +10,22 @@ yarn add react-native-sdk
 
 ## Usage
 
+### Wrap your app content with SdkProvider
+
+```Typescript
+import { SdkProvider } from 'react-native-sdk';
+
+export default function App() {
+  return (
+    <SdkProvider>
+      {/* App content */}
+    </SdkProvider>
+  );
+}
+```
+
+The use any of the components and APIs:
+
 <details open>
 <summary>Styled</summary>
 
