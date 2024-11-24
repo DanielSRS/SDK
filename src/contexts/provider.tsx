@@ -6,7 +6,7 @@ import { ColorsProvider } from './colors/colors';
 type WithoutChildren<T> = Omit<T, 'children'>;
 
 interface SdkProviderProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   colorSchemeProps?: WithoutChildren<
     ComponentProps<typeof ColorSchemeProvider>
   >;
