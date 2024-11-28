@@ -17,4 +17,5 @@ export { ColorPicker } from './components/ColorPicker';
 export { pickFile } from './api/file-picker';
 export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
+export { Menu } from './components/Menu/Menu';
 export type { PropsWithCustomHook } from './types/ComponentTypes';

@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import type { StyleProp, TextStyle, ImageStyle, ViewStyle } from 'react-native';
 
@@ -27,11 +28,15 @@ const createStyled = <P extends StyleableProps>(
 const partialCreateStyled =
   <P extends StyleableProps>(WrappedComponent: React.ComponentType<P>) =>
   (defaultStyles: InferStyle<P>, displayName?: string) => {
-    const styledComponent = (props: P) => {
+    const styledComponent = forwardRef((props: P, ref) => {
       return (
-        <WrappedComponent {...props} style={[defaultStyles, props.style]} />
+        <WrappedComponent
+          ref={ref}
+          {...props}
+          style={[defaultStyles, props.style]}
+        />
       );
-    };
+    });
 
     if (displayName) {
       styledComponent.displayName = displayName;
