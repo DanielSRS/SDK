@@ -1,5 +1,4 @@
 import {
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
@@ -20,6 +19,7 @@ import {
 import { Body } from '../Text/Body';
 import { HoverIndicator } from '../HoverIndicator';
 import { useColors } from '../../hooks/useColors';
+import { VModal } from '../VModal/VModal';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -87,7 +87,7 @@ export const Menu = function Menu(props: MenuProps) {
         onLayout={measureChildrenPosition}>
         <Target onPress={open}>{target}</Target>
       </TargetContainer>
-      <Modal transparent={true} visible={isMenuOpened} onRequestClose={close}>
+      <VModal transparent={true} visible={isMenuOpened} onRequestClose={close}>
         {/* Fundo desfocado */}
         {/* <Animated.View style={[FLEX_ONE, { opacity }]}>
           <BlurView style={FLEX_ONE} blurType="light">
@@ -131,7 +131,7 @@ export const Menu = function Menu(props: MenuProps) {
             </ClosesMenuContext.Provider>
           </MenuArea>
         </Pressable>
-      </Modal>
+      </VModal>
     </Container>
   );
 };

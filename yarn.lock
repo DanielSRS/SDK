@@ -3432,6 +3432,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@legendapp/state@npm:beta":
+  version: 3.0.0-beta.19
+  resolution: "@legendapp/state@npm:3.0.0-beta.19"
+  dependencies:
+    use-sync-external-store: ^1.2.2
+  checksum: 8fcbca2275d309b81a556761273d502546708c03872e5e13e27c0a1333efc8016a2ece0ca7fca03b90cbc3573c3d2f9ce58ab3c13eb2d7cc927b28e6527d1f7b
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -14727,6 +14736,7 @@ __metadata:
   dependencies:
     "@commitlint/config-conventional": ^17.0.2
     "@evilmartians/lefthook": ^1.5.0
+    "@legendapp/state": beta
     "@react-native/eslint-config": ^0.73.1
     "@release-it/conventional-changelog": ^5.0.0
     "@types/jest": ^29.5.5
@@ -17354,6 +17364,15 @@ __metadata:
     react: ">=18.0.0"
     scheduler: ">=0.19.0"
   checksum: d6e576d24959ffb5bb061102941bef9e0b35b05219e9f52f802c11062b003ad05904e257609f60b706627f39f4b0a37bec91d93fe217468d388431e44cead488
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "use-sync-external-store@npm:1.2.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: fe07c071c4da3645f112c38c0e57beb479a8838616ff4e92598256ecce527f2888c08febc7f9b2f0ce2f0e18540ba3cde41eb2035e4fafcb4f52955037098a81
   languageName: node
   linkType: hard
 
