@@ -2,11 +2,10 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  TouchableWithoutFeedback,
   useWindowDimensions,
+  View,
   type GestureResponderEvent,
   type TouchableOpacityProps,
-  type View,
 } from 'react-native';
 import { Styled } from '../Styled';
 import {
@@ -85,7 +84,13 @@ export const Menu = function Menu(props: MenuProps) {
       <TargetContainer
         ref={childrenContainerRef}
         onLayout={measureChildrenPosition}>
-        <Target onPress={open}>{target}</Target>
+        {target}
+        <Pressable
+          style={{
+            ...StyleSheet.absoluteFillObject,
+          }}
+          onPress={open}
+        />
       </TargetContainer>
       <VModal transparent={true} visible={isMenuOpened} onRequestClose={close}>
         {/* Fundo desfocado */}
@@ -163,9 +168,6 @@ Menu.MenuEntry = MenuEntry;
 
 const Container = Styled.createStyledView({});
 const TargetContainer = Styled.createStyledView({});
-const Target = Styled.createStyled(TouchableWithoutFeedback, {
-  ...StyleSheet.absoluteFillObject,
-});
 
 const MenuContainer = Styled.createStyledView({
   padding: 5,
@@ -211,4 +213,5 @@ const shadow =
         shadowRadius: 16.0,
 
         elevation: 24,
+        backgroundColor: 'white',
       };
