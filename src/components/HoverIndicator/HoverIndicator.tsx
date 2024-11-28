@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { useColors } from '../../hooks/useColors';
 
@@ -24,14 +24,5 @@ export function HoverIndicator(props: {
 
   const st = isHovered ? hoverStyles : restStyles;
 
-  return (
-    <Pressable
-      {...mouseEvents}
-      onPointerEnter={mouseEvents.onMouseEnter}
-      onPointerLeave={mouseEvents.onMouseLeave}
-      // onPress={onPress}
-      // disabled={disabled}
-      style={[StyleSheet.absoluteFill, st]}
-    />
-  );
+  return <View {...mouseEvents} style={[StyleSheet.absoluteFill, st]} />;
 }
