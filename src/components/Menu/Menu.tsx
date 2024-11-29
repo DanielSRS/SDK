@@ -2,7 +2,7 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  useWindowDimensions,
+  Dimensions,
   View,
   type GestureResponderEvent,
   type TouchableOpacityProps,
@@ -32,6 +32,10 @@ interface Layout {
   width: number;
   x: number;
   y: number;
+  /** window height */
+  wh: number;
+  /** window width */
+  ww: number;
 }
 
 interface MenuProps {
@@ -46,24 +50,28 @@ export const Menu = function Menu(props: MenuProps) {
     width: 0,
     x: 0,
     y: 0,
+    wh: 0,
+    ww: 0,
   });
   const childrenContainerRef = useRef<View>(null);
-  const { height, width } = useWindowDimensions();
   const colors = useColors();
 
-  const showOnLeft = () => layout.current.x < width / 2;
-  const showOnTop = () => layout.current.y < height / 2;
+  const showOnLeft = () => layout.current.x < layout.current.ww / 2;
+  const showOnTop = () => layout.current.y < layout.current.wh / 2;
 
   const measureChildrenPosition = useCallback(
     () =>
       new Promise<Layout>((resolve, _reject) => {
         // const i = Date.now();
+        const { height, width } = Dimensions.get('window');
         childrenContainerRef.current?.measureInWindow((x, y, w, h) => {
           const _layout = {
             x,
             y,
             height: h,
             width: w,
+            wh: height,
+            ww: width,
           };
           // const f = Date.now();
           // console.log(
@@ -77,8 +85,14 @@ export const Menu = function Menu(props: MenuProps) {
     []
   );
 
-  const close = () => setIsMenuOpened(false);
-  const open = () => setIsMenuOpened(true);
+  const close = () => {
+    measureChildrenPosition();
+    setIsMenuOpened(false);
+  };
+  const open = () => {
+    measureChildrenPosition();
+    setIsMenuOpened(true);
+  };
 
   return (
     <Container>
@@ -122,10 +136,14 @@ export const Menu = function Menu(props: MenuProps) {
                     : undefined,
                   bottom: showOnTop()
                     ? undefined
-                    : height - layout.current.y + DISTANCE_FROM_TARGET,
+                    : layout.current.wh -
+                      layout.current.y +
+                      DISTANCE_FROM_TARGET,
                   right: showOnLeft()
                     ? undefined
-                    : width - layout.current.x - layout.current.width,
+                    : layout.current.ww -
+                      layout.current.x -
+                      layout.current.width,
                   left: showOnLeft() ? layout.current.x : undefined,
                   backgroundColor:
                     colors.backgroundFillColorAcrylicBackgroundDefault,
@@ -207,7 +225,7 @@ const MenuEntryContainer = Styled.createStyledTouchableOpacity({
 });
 
 const MenuEntryHoverContainer = Styled.createStyledView({
-  minHeight: IS_MAC_OS ? 28 : 36,
+  minHeight: IS_MAC_OS ? 32 : 36,
   // backgroundColor: 'blue',
   paddingHorizontal: 11,
   borderRadius: 3,
