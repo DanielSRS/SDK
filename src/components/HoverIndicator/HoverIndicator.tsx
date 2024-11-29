@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { useColors } from '../../hooks/useColors';
 
@@ -10,10 +10,12 @@ export function HoverIndicator(props: {
   const colors = useColors();
   const {
     hoverStyles = {
-      backgroundColor: colors.controlAltSecondary,
+      backgroundColor: colors.fillColorSubtleSecondary,
+      // backgroundColor: 'pink',
     },
     restStyles = {
-      // backgroundColor: 'pink',
+      backgroundColor: colors.fillColorSubtleTransparent,
+      borderRadius: 3,
     },
   } = props;
   const [isHovered, setIsHovered] = useState(false);
@@ -22,16 +24,14 @@ export function HoverIndicator(props: {
     onMouseLeave: () => setIsHovered(false),
   };
 
-  const st = isHovered ? hoverStyles : restStyles;
-
   return (
-    <Pressable
+    <View
       {...mouseEvents}
-      onPointerEnter={mouseEvents.onMouseEnter}
-      onPointerLeave={mouseEvents.onMouseLeave}
-      // onPress={onPress}
-      // disabled={disabled}
-      style={[StyleSheet.absoluteFill, st]}
+      style={[
+        StyleSheet.absoluteFill,
+        restStyles,
+        isHovered ? hoverStyles : {},
+      ]}
     />
   );
 }

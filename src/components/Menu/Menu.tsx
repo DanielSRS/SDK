@@ -1,13 +1,11 @@
 import {
-  Modal,
   Platform,
   Pressable,
   StyleSheet,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
+  Dimensions,
+  View,
   type GestureResponderEvent,
   type TouchableOpacityProps,
-  type View,
 } from 'react-native';
 import { Styled } from '../Styled';
 import {
@@ -20,6 +18,8 @@ import {
 import { Body } from '../Text/Body';
 import { HoverIndicator } from '../HoverIndicator';
 import { useColors } from '../../hooks/useColors';
+import { VModal } from '../VModal/VModal';
+import { Caption } from '../Text/Caption';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -32,6 +32,10 @@ interface Layout {
   width: number;
   x: number;
   y: number;
+  /** window height */
+  wh: number;
+  /** window width */
+  ww: number;
 }
 
 interface MenuProps {
@@ -46,24 +50,28 @@ export const Menu = function Menu(props: MenuProps) {
     width: 0,
     x: 0,
     y: 0,
+    wh: 0,
+    ww: 0,
   });
   const childrenContainerRef = useRef<View>(null);
-  const { height, width } = useWindowDimensions();
   const colors = useColors();
 
-  const showOnLeft = () => layout.current.x < width / 2;
-  const showOnTop = () => layout.current.y < height / 2;
+  const showOnLeft = () => layout.current.x < layout.current.ww / 2;
+  const showOnTop = () => layout.current.y < layout.current.wh / 2;
 
   const measureChildrenPosition = useCallback(
     () =>
       new Promise<Layout>((resolve, _reject) => {
         // const i = Date.now();
+        const { height, width } = Dimensions.get('window');
         childrenContainerRef.current?.measureInWindow((x, y, w, h) => {
           const _layout = {
             x,
             y,
             height: h,
             width: w,
+            wh: height,
+            ww: width,
           };
           // const f = Date.now();
           // console.log(
@@ -77,17 +85,29 @@ export const Menu = function Menu(props: MenuProps) {
     []
   );
 
-  const close = () => setIsMenuOpened(false);
-  const open = () => setIsMenuOpened(true);
+  const close = () => {
+    measureChildrenPosition();
+    setIsMenuOpened(false);
+  };
+  const open = () => {
+    measureChildrenPosition();
+    setIsMenuOpened(true);
+  };
 
   return (
     <Container>
       <TargetContainer
         ref={childrenContainerRef}
         onLayout={measureChildrenPosition}>
-        <Target onPress={open}>{target}</Target>
+        {target}
+        <Pressable
+          style={{
+            ...StyleSheet.absoluteFillObject,
+          }}
+          onPress={open}
+        />
       </TargetContainer>
-      <Modal transparent={true} visible={isMenuOpened} onRequestClose={close}>
+      <VModal transparent={true} visible={isMenuOpened} onRequestClose={close}>
         {/* Fundo desfocado */}
         {/* <Animated.View style={[FLEX_ONE, { opacity }]}>
           <BlurView style={FLEX_ONE} blurType="light">
@@ -116,14 +136,22 @@ export const Menu = function Menu(props: MenuProps) {
                     : undefined,
                   bottom: showOnTop()
                     ? undefined
-                    : height - layout.current.y + DISTANCE_FROM_TARGET,
+                    : layout.current.wh -
+                      layout.current.y +
+                      DISTANCE_FROM_TARGET,
                   right: showOnLeft()
                     ? undefined
-                    : width - layout.current.x - layout.current.width,
+                    : layout.current.ww -
+                      layout.current.x -
+                      layout.current.width,
                   left: showOnLeft() ? layout.current.x : undefined,
                   backgroundColor:
-                    colors.backgroundFillColorCardBackgroundDefault,
-                  borderColor: colors.strokeColorDividerStrokeDefault,
+                    colors.backgroundFillColorAcrylicBackgroundDefault,
+                  // backgroundColor: 'red',
+                  ...(Platform.constants.reactNativeVersion.minor < 76 && {
+                    backgroundColor: colors.contextMenuBackgroundSolid,
+                  }),
+                  borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
                 }}>
                 {children}
@@ -131,10 +159,12 @@ export const Menu = function Menu(props: MenuProps) {
             </ClosesMenuContext.Provider>
           </MenuArea>
         </Pressable>
-      </Modal>
+      </VModal>
     </Container>
   );
 };
+
+const IS_MAC_OS = Platform.OS === 'macos';
 
 interface MenuEntryProps extends Omit<TouchableOpacityProps, 'children'> {
   children: string;
@@ -153,8 +183,11 @@ const MenuEntry = function MenuEntry(props: MenuEntryProps) {
 
   return (
     <MenuEntryContainer {...rest} onPress={onMenuPress}>
-      <HoverIndicator />
-      <Body>{children}</Body>
+      <MenuEntryHoverContainer>
+        <HoverIndicator />
+        {IS_MAC_OS && <Caption>{children}</Caption>}
+        {!IS_MAC_OS && <Body>{children}</Body>}
+      </MenuEntryHoverContainer>
     </MenuEntryContainer>
   );
 };
@@ -163,17 +196,14 @@ Menu.MenuEntry = MenuEntry;
 
 const Container = Styled.createStyledView({});
 const TargetContainer = Styled.createStyledView({});
-const Target = Styled.createStyled(TouchableWithoutFeedback, {
-  ...StyleSheet.absoluteFillObject,
-});
 
 const MenuContainer = Styled.createStyledView({
-  padding: 5,
-  borderWidth: StyleSheet.hairlineWidth,
-  maxWidth: 200,
-  minWidth: 150,
-  borderRadius: 9,
-  rowGap: 4,
+  paddingVertical: 2,
+  // borderWidth: StyleSheet.hairlineWidth,
+  borderWidth: 1,
+  maxWidth: 350,
+  minWidth: 250,
+  borderRadius: 7,
   position: 'absolute',
 });
 
@@ -187,11 +217,20 @@ const MenuArea = Styled.createStyledView({
 const MenuEntryContainer = Styled.createStyledTouchableOpacity({
   // paddingHorizontal: 16,
   // paddingVertical: 8,
-  // backgroundColor: 'red',
-  paddingHorizontal: 8,
-  paddingVertical: 4,
+  // backgroundColor: 'black',
+  paddingHorizontal: 5,
+  paddingVertical: 2,
   borderRadius: 4,
   overflow: 'hidden',
+});
+
+const MenuEntryHoverContainer = Styled.createStyledView({
+  minHeight: IS_MAC_OS ? 32 : 36,
+  // backgroundColor: 'blue',
+  paddingHorizontal: 11,
+  borderRadius: 3,
+  overflow: 'hidden',
+  justifyContent: 'center',
 });
 
 const bshadow = {
@@ -205,9 +244,9 @@ const shadow =
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
-          height: 12,
+          height: 8,
         },
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.14,
         shadowRadius: 16.0,
 
         elevation: 24,

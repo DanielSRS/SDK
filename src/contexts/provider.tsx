@@ -2,6 +2,7 @@ import React, { type ComponentProps } from 'react';
 import { ColorSchemeProvider } from './colorScheme';
 import { AppBackground } from '../components';
 import { ColorsProvider } from './colors/colors';
+import { VModalRoot } from '../components/VModal/VModal';
 
 type WithoutChildren<T> = Omit<T, 'children'>;
 
@@ -18,7 +19,10 @@ export function SdkProvider(props: SdkProviderProps) {
   return (
     <ColorSchemeProvider {...colorSchemeProps}>
       <ColorsProvider {...colorsProps}>
-        <AppBackground {...appBackgroundProps}>{children}</AppBackground>
+        <AppBackground {...appBackgroundProps}>
+          {children}
+          <VModalRoot />
+        </AppBackground>
       </ColorsProvider>
     </ColorSchemeProvider>
   );
