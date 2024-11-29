@@ -127,8 +127,12 @@ export const Menu = function Menu(props: MenuProps) {
                     : width - layout.current.x - layout.current.width,
                   left: showOnLeft() ? layout.current.x : undefined,
                   backgroundColor:
-                    colors.backgroundFillColorCardBackgroundDefault,
-                  borderColor: colors.strokeColorDividerStrokeDefault,
+                    colors.backgroundFillColorAcrylicBackgroundDefault,
+                  // backgroundColor: 'red',
+                  ...(Platform.constants.reactNativeVersion.minor < 76 && {
+                    backgroundColor: colors.contextMenuBackgroundSolid,
+                  }),
+                  borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
                 }}>
                 {children}
@@ -158,8 +162,10 @@ const MenuEntry = function MenuEntry(props: MenuEntryProps) {
 
   return (
     <MenuEntryContainer {...rest} onPress={onMenuPress}>
-      <HoverIndicator />
-      <Body>{children}</Body>
+      <MenuEntryHoverContainer>
+        <HoverIndicator />
+        <Body>{children}</Body>
+      </MenuEntryHoverContainer>
     </MenuEntryContainer>
   );
 };
@@ -170,12 +176,12 @@ const Container = Styled.createStyledView({});
 const TargetContainer = Styled.createStyledView({});
 
 const MenuContainer = Styled.createStyledView({
-  padding: 5,
-  borderWidth: StyleSheet.hairlineWidth,
-  maxWidth: 200,
-  minWidth: 150,
-  borderRadius: 9,
-  rowGap: 4,
+  paddingVertical: 2,
+  // borderWidth: StyleSheet.hairlineWidth,
+  borderWidth: 1,
+  maxWidth: 350,
+  minWidth: 250,
+  borderRadius: 7,
   position: 'absolute',
 });
 
@@ -189,11 +195,20 @@ const MenuArea = Styled.createStyledView({
 const MenuEntryContainer = Styled.createStyledTouchableOpacity({
   // paddingHorizontal: 16,
   // paddingVertical: 8,
-  // backgroundColor: 'red',
+  // backgroundColor: 'black',
   paddingHorizontal: 8,
-  paddingVertical: 4,
+  paddingVertical: 2,
   borderRadius: 4,
   overflow: 'hidden',
+});
+
+const MenuEntryHoverContainer = Styled.createStyledView({
+  minHeight: 36,
+  // backgroundColor: 'blue',
+  paddingHorizontal: 11,
+  borderRadius: 3,
+  overflow: 'hidden',
+  justifyContent: 'center',
 });
 
 const bshadow = {
@@ -207,11 +222,10 @@ const shadow =
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
-          height: 12,
+          height: 8,
         },
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.14,
         shadowRadius: 16.0,
 
         elevation: 24,
-        backgroundColor: 'white',
       };

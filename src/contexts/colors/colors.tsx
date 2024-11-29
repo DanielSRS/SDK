@@ -56,6 +56,8 @@ type ColorTokens =
   | 'backgroundFillColorMicaBackgroundBase'
   | 'backgroundFillColorSolidBackgroundBase'
   | 'backgroundFillColorSolidBackgroundSecondary'
+  | 'strokeColorSurfaceStrokeFlayout'
+  | 'contextMenuBackgroundSolid'
   | 'controlAltSecondary';
 
 type Colors = {
@@ -141,6 +143,8 @@ const DEFAULT_LIGHT_COLORS: Colors = {
   backgroundFillColorMicaBackgroundBase: 'rgba(243, 243, 243, 0.5)',
   backgroundFillColorSolidBackgroundBase: 'rgb(243, 243, 243)',
   backgroundFillColorSolidBackgroundSecondary: 'rgb(238, 238, 238)',
+  strokeColorSurfaceStrokeFlayout: 'rgba(0, 0, 0, 0.0578)',
+  contextMenuBackgroundSolid: 'rgba(252, 252, 252, 1)',
 };
 
 const DEFAULT_DARK_COLORS: Colors = {
@@ -198,4 +202,6 @@ const DEFAULT_DARK_COLORS: Colors = {
   backgroundFillColorMicaBackgroundBase: 'rgba(32, 32, 32, 0.8)',
   backgroundFillColorSolidBackgroundBase: 'rgb(32, 32, 32)',
   backgroundFillColorSolidBackgroundSecondary: 'rgb(28, 28, 28)',
+  strokeColorSurfaceStrokeFlayout: 'rgba(0, 0, 0, 0.2)',
+  contextMenuBackgroundSolid: 'rgba(44, 44, 44, 1)',
 };

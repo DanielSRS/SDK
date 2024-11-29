@@ -10,10 +10,12 @@ export function HoverIndicator(props: {
   const colors = useColors();
   const {
     hoverStyles = {
-      backgroundColor: colors.controlAltSecondary,
+      backgroundColor: colors.fillColorSubtleSecondary,
+      // backgroundColor: 'pink',
     },
     restStyles = {
-      // backgroundColor: 'pink',
+      backgroundColor: colors.fillColorSubtleTransparent,
+      borderRadius: 3,
     },
   } = props;
   const [isHovered, setIsHovered] = useState(false);
@@ -22,7 +24,14 @@ export function HoverIndicator(props: {
     onMouseLeave: () => setIsHovered(false),
   };
 
-  const st = isHovered ? hoverStyles : restStyles;
-
-  return <View {...mouseEvents} style={[StyleSheet.absoluteFill, st]} />;
+  return (
+    <View
+      {...mouseEvents}
+      style={[
+        StyleSheet.absoluteFill,
+        restStyles,
+        isHovered ? hoverStyles : {},
+      ]}
+    />
+  );
 }
