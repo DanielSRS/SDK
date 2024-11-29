@@ -19,6 +19,7 @@ import { Body } from '../Text/Body';
 import { HoverIndicator } from '../HoverIndicator';
 import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
+import { Caption } from '../Text/Caption';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -145,6 +146,8 @@ export const Menu = function Menu(props: MenuProps) {
   );
 };
 
+const IS_MAC_OS = Platform.OS === 'macos';
+
 interface MenuEntryProps extends Omit<TouchableOpacityProps, 'children'> {
   children: string;
 }
@@ -164,7 +167,8 @@ const MenuEntry = function MenuEntry(props: MenuEntryProps) {
     <MenuEntryContainer {...rest} onPress={onMenuPress}>
       <MenuEntryHoverContainer>
         <HoverIndicator />
-        <Body>{children}</Body>
+        {IS_MAC_OS && <Caption>{children}</Caption>}
+        {!IS_MAC_OS && <Body>{children}</Body>}
       </MenuEntryHoverContainer>
     </MenuEntryContainer>
   );
@@ -196,14 +200,14 @@ const MenuEntryContainer = Styled.createStyledTouchableOpacity({
   // paddingHorizontal: 16,
   // paddingVertical: 8,
   // backgroundColor: 'black',
-  paddingHorizontal: 8,
+  paddingHorizontal: 5,
   paddingVertical: 2,
   borderRadius: 4,
   overflow: 'hidden',
 });
 
 const MenuEntryHoverContainer = Styled.createStyledView({
-  minHeight: 36,
+  minHeight: IS_MAC_OS ? 28 : 36,
   // backgroundColor: 'blue',
   paddingHorizontal: 11,
   borderRadius: 3,
