@@ -149,7 +149,8 @@ export const Menu = function Menu(props: MenuProps) {
                     colors.backgroundFillColorAcrylicBackgroundDefault,
                   // backgroundColor: 'red',
                   ...(Platform.constants.reactNativeVersion.minor < 76 && {
-                    backgroundColor: colors.contextMenuBackgroundSolid,
+                    backgroundColor:
+                      colors.backgroundFillColorSolidBackgroundBase,
                   }),
                   borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,

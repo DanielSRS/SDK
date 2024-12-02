@@ -23,4 +23,7 @@ const AbsolutePositioned = (children: React.ReactNode, zIndex: number) => {
   return <View style={[StyleSheet.absoluteFill, { zIndex }]}>{children}</View>;
 };
 
-const zStackContainerStyle: ViewProps['style'] = { overflow: 'hidden' };
+const zStackContainerStyle: ViewProps['style'] = {
+  overflow: 'hidden',
+  flex: 1,
+};
