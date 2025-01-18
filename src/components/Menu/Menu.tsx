@@ -20,6 +20,7 @@ import { HoverIndicator } from '../HoverIndicator';
 import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
 import { Caption } from '../Text/Caption';
+import { suportsBoxShadow } from '../../utils/constants';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -148,7 +149,7 @@ export const Menu = function Menu(props: MenuProps) {
                   backgroundColor:
                     colors.backgroundFillColorAcrylicBackgroundDefault,
                   // backgroundColor: 'red',
-                  ...(Platform.constants.reactNativeVersion.minor < 76 && {
+                  ...(!suportsBoxShadow && {
                     backgroundColor:
                       colors.backgroundFillColorSolidBackgroundBase,
                   }),
@@ -238,17 +239,16 @@ const bshadow = {
   boxShadow: '10 10 43 0 rgba(0,0,0,0.59)',
 } as const;
 
-const shadow =
-  Platform.constants.reactNativeVersion.minor >= 76
-    ? bshadow
-    : {
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 8,
-        },
-        shadowOpacity: 0.14,
-        shadowRadius: 16.0,
+const shadow = suportsBoxShadow
+  ? bshadow
+  : {
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 0.14,
+      shadowRadius: 16.0,
 
-        elevation: 24,
-      };
+      elevation: 24,
+    };
