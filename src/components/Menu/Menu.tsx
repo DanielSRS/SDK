@@ -187,12 +187,14 @@ const MenuEntry = function MenuEntry(props: MenuEntryProps) {
     <MenuEntryContainer {...rest} onPress={onMenuPress}>
       <MenuEntryHoverContainer>
         <HoverIndicator />
-        {IS_MAC_OS && <Caption>{children}</Caption>}
-        {!IS_MAC_OS && <Body>{children}</Body>}
+        {IS_MAC_OS && <Caption style={ignoreMouseEvents}>{children}</Caption>}
+        {!IS_MAC_OS && <Body style={ignoreMouseEvents}>{children}</Body>}
       </MenuEntryHoverContainer>
     </MenuEntryContainer>
   );
 };
+
+const ignoreMouseEvents = { pointerEvents: 'none' } as const;
 
 Menu.MenuEntry = MenuEntry;
 
