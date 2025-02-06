@@ -18,4 +18,5 @@ export { pickFile } from './api/file-picker';
 export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
 export { Menu } from './components/Menu/Menu';
+export { Constants } from './utils/constants';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
