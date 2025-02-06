@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Appearance, useColorScheme } from 'react-native';
+import React from 'react';
+import { use$ } from '@legendapp/state/react';
 import { createContext } from '../../libs';
-import type { ColorSchemeName } from 'react-native';
-
-type ColorScheme = NonNullable<ColorSchemeName>;
+import type { ColorScheme, UserColorScheme } from './color-scheme.types';
+import {
+  AppColorScheme$,
+  ColorScheme$,
+  SystemColorScheme$,
+  SetColorScheme,
+} from './color-scheme';
 
 interface ColorSchemeContextProps {
   systemColorScheme: ColorScheme;
@@ -12,37 +16,17 @@ interface ColorSchemeContextProps {
   appColorScheme: UserColorScheme;
 }
 
-type UserColorScheme = 'system' | 'light' | 'dark';
-
 export const ColorSchemeContext = createContext({} as ColorSchemeContextProps);
 
-const updateScheme =
-  (d: (c: UserColorScheme) => void) => (c: UserColorScheme) => {
-    switch (c) {
-      case 'dark':
-        Appearance.setColorScheme('dark');
-        break;
-      case 'light':
-        Appearance.setColorScheme('light');
-        break;
-      default:
-        Appearance.setColorScheme(null);
-        break;
-    }
-    d(c);
-  };
-
 const useColorSchemeData = (): ColorSchemeContextProps => {
-  const systemColorScheme = useColorScheme() || 'light';
-  const [appColorScheme, setAppColorScheme] =
-    useState<UserColorScheme>('system');
-  const colorScheme: NonNullable<ColorSchemeName> =
-    appColorScheme === 'system' ? systemColorScheme : appColorScheme;
+  const colorScheme = use$(ColorScheme$);
+  const systemColorScheme = use$(SystemColorScheme$);
+  const appColorScheme = use$(AppColorScheme$);
 
   return {
     colorScheme,
     systemColorScheme,
-    setAppColorScheme: updateScheme(setAppColorScheme),
+    setAppColorScheme: SetColorScheme,
     appColorScheme,
   };
 };

@@ -19,4 +19,10 @@ export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
 export { Menu } from './components/Menu/Menu';
 export { Constants } from './utils/constants';
+export {
+  AppColorScheme$,
+  ColorScheme$,
+  SystemColorScheme$,
+  SetColorScheme,
+} from './contexts/colorScheme/color-scheme';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
