@@ -25,4 +25,5 @@ export {
   SystemColorScheme$,
   SetColorScheme,
 } from './contexts/colorScheme/color-scheme';
+export { Colors$ } from './contexts/colors/colors';
 export type { PropsWithCustomHook } from './types/ComponentTypes';

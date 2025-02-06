@@ -1,4 +1,6 @@
-import { useColorScheme } from '../../hooks/useColorSheme';
+import { use$ } from '@legendapp/state/react';
+import { observable } from '@legendapp/state';
+import { ColorScheme$ } from '../colorScheme/color-scheme';
 import { createContext } from '../../libs';
 import type { ColorValue } from 'react-native';
 import type { ReactNode, FC } from 'react';
@@ -70,10 +72,14 @@ interface ColorsContextProps {
 
 export const ColorsContext = createContext({} as ColorsContextProps);
 
+export const Colors$ = observable(() => {
+  return ColorScheme$.get() === 'light'
+    ? DEFAULT_LIGHT_COLORS
+    : DEFAULT_DARK_COLORS;
+});
+
 const useColorsData = (): ColorsContextProps => {
-  const colorSheme = useColorScheme();
-  const colors =
-    colorSheme === 'light' ? DEFAULT_LIGHT_COLORS : DEFAULT_DARK_COLORS;
+  const colors = use$(Colors$);
 
   return {
     colors,
