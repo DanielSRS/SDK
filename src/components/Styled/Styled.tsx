@@ -13,9 +13,15 @@ const createStyled = <P extends StyleableProps>(
   defaultStyles: InferStyle<P>,
   displayName?: string
 ) => {
-  const styledComponent = (props: P) => {
-    return <WrappedComponent {...props} style={[defaultStyles, props.style]} />;
-  };
+  const styledComponent = forwardRef((props: P, ref) => {
+    return (
+      <WrappedComponent
+        ref={ref}
+        {...props}
+        style={[defaultStyles, props.style]}
+      />
+    );
+  });
   if (displayName) {
     styledComponent.displayName = displayName;
   }
