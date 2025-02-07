@@ -1,24 +1,27 @@
-import React from 'react';
-import {
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  type LayoutChangeEvent,
-} from 'react-native';
+import React, { useRef } from 'react';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
-import { observable } from '@legendapp/state';
+import { observable, ObservableHint } from '@legendapp/state';
+import type { LayoutChangeEvent } from 'react-native';
+import { useMount } from '@legendapp/state/react';
 
 const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
+
+export const RootViewRef$ = observable<React.RefObject<View>>();
 
 interface AppBackgroundProps {
   children: React.ReactNode;
   transparentBackground?: boolean;
 }
+
 export const AppBackground = (props: AppBackgroundProps) => {
   const { children, transparentBackground } = props;
+  const rootViewRef = useRef<View>(null);
   const currentTheme = useColorScheme();
+  useMount(() => {
+    RootViewRef$.set(ObservableHint.opaque(rootViewRef));
+  });
   const colors = useColors();
   const isDark = currentTheme === 'dark';
   const backgroundColor = {
@@ -29,6 +32,7 @@ export const AppBackground = (props: AppBackgroundProps) => {
 
   return (
     <View
+      ref={rootViewRef}
       onLayout={updateRootViewDimensions}
       style={[
         styles.appContainer,

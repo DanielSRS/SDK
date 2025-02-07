@@ -20,7 +20,10 @@ import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
 import { Caption } from '../Text/Caption';
 import { suportsBoxShadow } from '../../utils/constants';
-import { RootSDKViewDimensions$ } from '../AppBackground/AppBackground';
+import {
+  RootSDKViewDimensions$,
+  RootViewRef$,
+} from '../AppBackground/AppBackground';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -64,24 +67,31 @@ export const Menu = function Menu(props: MenuProps) {
     () =>
       new Promise<Layout>((resolve, _reject) => {
         // const i = Date.now();
-        childrenContainerRef.current?.measureInWindow((x, y, w, h) => {
-          const sdkrootview = RootSDKViewDimensions$.peek();
-          const _layout = {
-            x: x - (sdkrootview.left ?? 0),
-            y: y - (sdkrootview.top ?? 0),
-            height: h,
-            width: w,
-            wh: sdkrootview.height,
-            ww: sdkrootview.width,
-          };
-          // const f = Date.now();
-          // console.log(
-          //   `medido em: ${f - i}ms \n`,
-          //   JSON.stringify(layout, null, 2)
-          // );
-          resolve(_layout);
-          layout.current = _layout;
-        });
+        const rootViewRef = RootViewRef$.peek()?.current;
+        if (!rootViewRef) {
+          return;
+        }
+        childrenContainerRef.current?.measureLayout(
+          rootViewRef,
+          (left, top, width, height) => {
+            const sdkrootview = RootSDKViewDimensions$.peek();
+            const _layout = {
+              x: left,
+              y: top,
+              height,
+              width,
+              wh: sdkrootview.height,
+              ww: sdkrootview.width,
+            };
+            // const f = Date.now();
+            // console.log(
+            //   `medido em: ${f - i}ms \n`,
+            //   JSON.stringify(layout, null, 2)
+            // );
+            resolve(_layout);
+            layout.current = _layout;
+          }
+        );
       }),
     []
   );
