@@ -72,12 +72,6 @@ interface ColorsContextProps {
 
 export const ColorsContext = createContext({} as ColorsContextProps);
 
-export const Colors$ = observable(() => {
-  return ColorScheme$.get() === 'light'
-    ? DEFAULT_LIGHT_COLORS
-    : DEFAULT_DARK_COLORS;
-});
-
 const useColorsData = (): ColorsContextProps => {
   const colors = use$(Colors$);
 
@@ -211,3 +205,7 @@ const DEFAULT_DARK_COLORS: Colors = {
   strokeColorSurfaceStrokeFlayout: 'rgba(0, 0, 0, 0.2)',
   contextMenuBackgroundSolid: 'rgba(44, 44, 44, 1)',
 };
+
+export const Colors$ = observable(() =>
+  ColorScheme$.get() === 'light' ? DEFAULT_LIGHT_COLORS : DEFAULT_DARK_COLORS
+);
