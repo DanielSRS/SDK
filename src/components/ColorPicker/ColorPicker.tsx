@@ -1,36 +1,66 @@
-import { Animated, Image, Pressable, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Image,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native';
 import { PanResponder, InteractionManager } from 'react-native';
 import { Base64 } from '../../utils/base64';
 import { png } from '../../utils/createPng';
 import { createCrossSectionofHSVCylinder } from '../../utils/hsv';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, type ComponentProps } from 'react';
 import { useColors } from '../../hooks/useColors';
 import { interpolate } from '../../utils/linearInterpolation';
 import { hsv2rgb } from '../../utils/hsv2rgb';
 import { Body } from '../Text/Body';
+import { Memo, use$, useObservable } from '@legendapp/state/react';
+import { Colors$ } from '../../contexts/colors/colors';
+import { Styled } from '../Styled';
 
 const SELECTOR_DIAMETER = 14;
 
-export function ColorPicker() {
+interface ColorPickerProps {
+  //
+}
+
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+interface GeneratedImage {
+  pngDataUri: string;
+  width: number;
+  height: number;
+}
+
+/**
+ * Not a constant.
+ */
+const COORDINATES = {
+  dx: 0,
+  dy: 0,
+  dxOffset: 0,
+  dyOffset: 0,
+  x: 0,
+  y: 0,
+  isInTheCircle: true,
+  xLinha: 0,
+  yLinha: 0,
+};
+
+export function ColorPicker(props: ColorPickerProps) {
+  const {} = props;
   const colors = useColors();
   const selectorPosition = useRef(new Animated.ValueXY()).current;
-  const [selectedColor, setSelectedColor] = useState<string>();
-  const [img, setImg] = useState<{
-    pngDataUri: string;
-    width: number;
-    height: number;
-  }>();
-  const [coordinates, setC] = useState({
-    dx: 0,
-    dy: 0,
-    dxOffset: 0,
-    dyOffset: 0,
-    x: 0,
-    y: 0,
-    isInTheCircle: true,
-    xLinha: 0,
-    yLinha: 0,
-  });
+  const selectedColor$ = useObservable<RGB>();
+  const img$ = useObservable<GeneratedImage>();
+  const coordinates$ = useObservable(COORDINATES);
 
   // console.log({ ...selectorPosition.x });
 
@@ -41,12 +71,13 @@ export function ColorPicker() {
 
       const end = Date.now();
       const elapsed = end - start;
-      console.log('ColorPicker generated image in: ', elapsed);
+      elapsed;
+      // console.log('ColorPicker generated image in: ', elapsed);
 
-      setImg(res);
+      img$.set(res);
     });
     return () => interactionPromise.cancel();
-  }, []);
+  }, [img$]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -84,7 +115,7 @@ export function ColorPicker() {
         const xLinha = (radius * x) / distance - dxOffset;
         const yLinha = (radius * y) / distance - dyOffset;
 
-        setC({
+        coordinates$.set({
           dx,
           dxOffset,
           dy,
@@ -96,17 +127,17 @@ export function ColorPicker() {
           yLinha,
         });
 
-        console.log(
-          JSON.stringify(
-            {
-              ...gestureState,
-              dxOffset,
-              dyOffset,
-            },
-            null,
-            2
-          )
-        );
+        // console.log(
+        //   JSON.stringify(
+        //     {
+        //       ...gestureState,
+        //       dxOffset,
+        //       dyOffset,
+        //     },
+        //     null,
+        //     2
+        //   )
+        // );
         if (isInTheCircle) {
           selectorPosition.setValue(n);
         } else {
@@ -123,166 +154,203 @@ export function ColorPicker() {
     <View>
       {/* Color box */}
       <View style={styles.colorBox}>
-        {!!img && (
-          <View>
-            <Image
-              style={{
-                width: img.width,
-                height: img.height,
-              }}
-              source={{ uri: img.pngDataUri }}
-            />
+        <Memo>
+          {() => {
+            const img = img$.get();
 
-            {/* Selector */}
-            <View style={[StyleSheet.absoluteFill, styles.selectorContainer]}>
-              <Pressable
-                onPress={event => {
-                  const radius = 128;
-                  const x = event.nativeEvent.locationX - radius;
-                  const y = event.nativeEvent.locationY - radius;
+            if (!img) {
+              return null;
+            }
 
-                  const isInTheCircle = x * x + y * y < radius * radius;
+            return (
+              <View>
+                <Image
+                  style={{
+                    width: img.width,
+                    height: img.height,
+                  }}
+                  source={{ uri: img.pngDataUri }}
+                />
 
-                  if (!isInTheCircle) {
-                    return;
-                  }
+                {/* Selector */}
+                <View
+                  style={[StyleSheet.absoluteFill, styles.selectorContainer]}>
+                  <Pressable
+                    onPress={event => {
+                      const radius = 128;
+                      const x = event.nativeEvent.locationX - radius;
+                      const y = event.nativeEvent.locationY - radius;
 
-                  Animated.timing(selectorPosition, {
-                    useNativeDriver: false,
-                    toValue: {
-                      x,
-                      y,
-                    },
-                    duration: 100,
-                    // easing: Easing.bounce,
-                  }).start(r => {
-                    if (r.finished) {
-                      // setTimeout(() => {
-                      //   shouldEase.current = true;
-                      // }, 20);
-                    }
-                  });
-                  // console.log(
-                  //   JSON.stringify(
-                  //     {
-                  //       x,
-                  //       y,
-                  //     },
-                  //     null,
-                  //     2
-                  //   )
-                  // );
-                }}
-                style={StyleSheet.absoluteFill}
-              />
-              {/* <View
-                style={{
-                  height: 1,
-                  width: '100%',
-                  top: 127,
-                  left: 0,
-                  right: 0,
-                  position: 'absolute',
-                  backgroundColor: 'white',
-                }}
-              />
+                      const isInTheCircle = x * x + y * y < radius * radius;
+
+                      if (!isInTheCircle) {
+                        return;
+                      }
+
+                      Animated.timing(selectorPosition, {
+                        useNativeDriver: false,
+                        toValue: {
+                          x,
+                          y,
+                        },
+                        duration: 100,
+                      }).start();
+                    }}
+                    style={StyleSheet.absoluteFill}
+                  />
+                  <Animated.View
+                    {...panResponder.panHandlers}
+                    style={[
+                      styles.selector,
+                      {
+                        left: selectorPosition.x,
+                        top: selectorPosition.y,
+                      },
+                    ]}
+                    onLayout={event => {
+                      const radius = 128;
+                      const { height, width, x, y } = event.nativeEvent.layout;
+                      const dx = x - radius + width / 2;
+                      const dy = y - radius + height / 2;
+
+                      let diffX2 = dx * dx;
+                      let diffY2 = dy * dy;
+
+                      const isInTheCircle = diffX2 + diffY2 < radius * radius;
+
+                      if (!isInTheCircle) {
+                        // console.log(
+                        //   'out of the circle',
+                        //   JSON.stringify({ height, width, dx, dy }, null, 2)
+                        // );
+                        return;
+                      }
+
+                      /** Angle in radians */
+                      let angle = Math.atan2(radius - y, radius - x);
+
+                      /** Convert it to degrees */
+                      angle = angle * (180 / Math.PI);
+                      while (angle < 0) {
+                        angle += 360;
+                      }
+                      while (angle > 360) {
+                        angle -= 360;
+                      }
+
+                      let distance = Math.sqrt(diffX2 + diffY2);
+                      const inter = interpolate(0, radius, 0, 1, distance);
+
+                      let color = hsv2rgb(angle, inter, 1);
+                      // if (diffX2 + diffY2 < RADIUS_SQ) {
+                      //   // console.log(d);
+                      // }
+
+                      // const cor = { ...color, a: alpaChannel };
+
+                      // console.log(
+                      //   'Ocolor',
+                      //   JSON.stringify({ height, width, dx, dy, cor }, null, 2)
+                      // );
+
+                      selectedColor$.set({
+                        r: color.r,
+                        g: color.g,
+                        b: color.b,
+                      });
+                    }}
+                  />
+                </View>
+              </View>
+            );
+          }}
+        </Memo>
+
+        <Memo>
+          {() => {
+            const { b, g, r } = selectedColor$.get() ?? {};
+            return (
               <View
-                style={{
-                  width: 1,
-                  height: '100%',
-                  top: 0,
-                  left: 127,
-                  bottom: 0,
-                  position: 'absolute',
-                  backgroundColor: 'white',
-                }}
-              /> */}
-              <Animated.View
-                {...panResponder.panHandlers}
                 style={[
-                  styles.selector,
+                  styles.swatchPreview,
                   {
-                    left: selectorPosition.x,
-                    top: selectorPosition.y,
+                    // height: img?.height,
+                    backgroundColor: `rgb(${r}, ${g}, ${b})`,
+                    borderColor: colors.strokeColorControlStrongStrokeDefault,
                   },
                 ]}
-                onLayout={event => {
-                  const radius = 128;
-                  const { height, width, x, y } = event.nativeEvent.layout;
-                  const dx = x - radius + width / 2;
-                  const dy = y - radius + height / 2;
-
-                  let diffX2 = dx * dx;
-                  let diffY2 = dy * dy;
-
-                  const isInTheCircle = diffX2 + diffY2 < radius * radius;
-
-                  if (!isInTheCircle) {
-                    // console.log(
-                    //   'out of the circle',
-                    //   JSON.stringify({ height, width, dx, dy }, null, 2)
-                    // );
-                    return;
-                  }
-
-                  /** Angle in radians */
-                  let angle = Math.atan2(radius - y, radius - x);
-
-                  /** Convert it to degrees */
-                  angle = angle * (180 / Math.PI);
-                  while (angle < 0) {
-                    angle += 360;
-                  }
-                  while (angle > 360) {
-                    angle -= 360;
-                  }
-
-                  let distance = Math.sqrt(diffX2 + diffY2);
-                  const inter = interpolate(0, radius, 0, 1, distance);
-
-                  let color = hsv2rgb(angle, inter, 1);
-                  // if (diffX2 + diffY2 < RADIUS_SQ) {
-                  //   // console.log(d);
-                  // }
-
-                  // const cor = { ...color, a: alpaChannel };
-
-                  // console.log(
-                  //   'Ocolor',
-                  //   JSON.stringify({ height, width, dx, dy, cor }, null, 2)
-                  // );
-
-                  setSelectedColor(`rgb(${color.r}, ${color.g}, ${color.b})`);
-                }}
               />
-            </View>
-          </View>
-        )}
-
-        <View
-          style={[
-            styles.swatchPreview,
-            {
-              // height: img?.height,
-              backgroundColor: selectedColor,
-              borderColor: colors.strokeColorControlStrongStrokeDefault,
-            },
-          ]}
-        />
+            );
+          }}
+        </Memo>
       </View>
 
       {/* Color */}
-      <Body>{selectedColor}</Body>
-      <Body> </Body>
-      <Body>{`dx\t\t\t\t\t\t${coordinates.dx}`}</Body>
-      <Body>{`x\t\t\t\t\t\t${coordinates.x}`}</Body>
-      <Body>{`dy\t\t\t\t\t\t${coordinates.dy}`}</Body>
-      <Body>{`y\t\t\t\t\t\t${coordinates.y}`}</Body>
-      <Body>{`xLinha\t\t\t\t\t${coordinates.xLinha}`}</Body>
-      <Body>{`yLinha\t\t\t\t\t${coordinates.yLinha}`}</Body>
-      <Body>{`dxOffset\t\t\t\t\t${coordinates.dxOffset}`}</Body>
-      <Body>{`dyOffset\t\t\t\t${coordinates.dyOffset}`}</Body>
-      <Body>{`isInTheCircle\t\t\t\t${coordinates.isInTheCircle}`}</Body>
+      <Row>
+        <InputGroup>
+          <Row>
+            <Input defaultValue={'RGB'} />
+          </Row>
+          <Row>
+            <Memo>
+              {() => (
+                <Input defaultValue={selectedColor$.r.get()?.toString()} />
+              )}
+            </Memo>
+            <Body>Red</Body>
+          </Row>
+          <Row>
+            <Memo>
+              {() => (
+                <Input defaultValue={selectedColor$.g.get()?.toString()} />
+              )}
+            </Memo>
+            <Body>Green</Body>
+          </Row>
+          <Row>
+            <Memo>
+              {() => (
+                <Input defaultValue={selectedColor$.b.get()?.toString()} />
+              )}
+            </Memo>
+            <Body>Blue</Body>
+          </Row>
+        </InputGroup>
+        <InputGroup>
+          <Memo>
+            {() => {
+              const { b, g, r } = selectedColor$.get() ?? {
+                r: 255,
+                g: 255,
+                b: 255,
+              };
+              return (
+                <Input
+                  defaultValue={`#${r.toString(16)}${g.toString(16)}${b.toString(16)}`.toUpperCase()}
+                />
+              );
+            }}
+          </Memo>
+        </InputGroup>
+      </Row>
+      {/* <Memo>
+        {() => {
+          const coordinates = coordinates$.get();
+          return (
+            <>
+              <Body>{`dx\t\t\t\t\t\t${coordinates.dx}`}</Body>
+              <Body>{`x\t\t\t\t\t\t${coordinates.x}`}</Body>
+              <Body>{`dy\t\t\t\t\t\t${coordinates.dy}`}</Body>
+              <Body>{`y\t\t\t\t\t\t${coordinates.y}`}</Body>
+              <Body>{`xLinha\t\t\t\t\t${coordinates.xLinha}`}</Body>
+              <Body>{`yLinha\t\t\t\t\t${coordinates.yLinha}`}</Body>
+              <Body>{`dxOffset\t\t\t\t\t${coordinates.dxOffset}`}</Body>
+              <Body>{`dyOffset\t\t\t\t${coordinates.dyOffset}`}</Body>
+              <Body>{`isInTheCircle\t\t\t\t${coordinates.isInTheCircle}`}</Body>
+            </>
+          );
+        }}
+      </Memo> */}
     </View>
   );
 }
@@ -352,3 +420,35 @@ function generateColorSection() {
     height,
   };
 }
+
+function Input(props: ComponentProps<typeof TextInput>) {
+  const colors = use$(Colors$);
+  const sty: StyleProp<TextStyle> = {
+    borderWidth: 1,
+    borderRadius: 4,
+    // minHeight: 32,
+    paddingVertical: 5,
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    minWidth: 110,
+    color: colors.fillColorTextSecondary,
+    backgroundColor: colors.fillColorControlDefault,
+    borderColor: colors.strokeColorSurfaceStrokeFlayout,
+    borderBottomColor: colors.fillColorControlStrongDefault,
+  } as const;
+  return <TextInput {...props} style={[sty, props.style]} />;
+}
+
+const Row = Styled.createStyledView({
+  flexDirection: 'row',
+  alignItems: 'center',
+  columnGap: 8,
+});
+
+const InputGroup = Styled.createStyledView({
+  paddingTop: 32,
+  rowGap: 12,
+  // borderWidth: 1,
+  // borderColor: 'red',
+  height: '100%',
+});
