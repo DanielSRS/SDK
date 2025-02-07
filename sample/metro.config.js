@@ -1,5 +1,6 @@
 const path = require('path');
 const pkg = require('../package.json');
+const withStorybook = require('@storybook/react-native/metro/withStorybook');
 const { getConfig } = require('react-native-builder-bob/metro-config');
 const { makeMetroConfig } = require('@rnx-kit/metro-config');
 
@@ -24,7 +25,7 @@ const a = makeMetroConfig({
  *
  * @type {import('metro-config').MetroConfig}
  */
-module.exports = getConfig(
+const config = getConfig(
   {
     ...a,
     resolver: {
@@ -40,3 +41,18 @@ module.exports = getConfig(
     project: __dirname,
   }
 );
+
+module.exports = withStorybook(config, {
+  // Set to false to remove storybook specific options
+  // you can also use a env variable to set this
+  enabled: true,
+  // Path to your storybook config
+  configPath: path.resolve(__dirname, './.ondevice'),
+
+  // Optional websockets configuration
+  // Starts a websocket server on the specified port and host on metro start
+  // websockets: {
+  //   port: 7007,
+  //   host: 'localhost',
+  // },
+});
