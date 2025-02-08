@@ -27,4 +27,9 @@ export {
   SetColorScheme,
 } from './contexts/colorScheme/color-scheme';
 export { Colors$ } from './contexts/colors/colors';
+export {
+  Breakpoint$,
+  useBreakpoints,
+  calculateBreakpoint,
+} from './hooks/useBreakpoints';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
