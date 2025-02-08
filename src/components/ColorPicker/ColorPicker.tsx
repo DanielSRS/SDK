@@ -20,6 +20,7 @@ import { Body } from '../Text/Body';
 import { Memo, use$, useObservable } from '@legendapp/state/react';
 import { Colors$ } from '../../contexts/colors/colors';
 import { Styled } from '../Styled';
+import { Constants } from '../../utils/constants';
 
 const SELECTOR_DIAMETER = 14;
 
@@ -54,11 +55,17 @@ const COORDINATES = {
   yLinha: 0,
 };
 
+const WHITE_COLOR = {
+  r: 255,
+  g: 255,
+  b: 255,
+};
+
 export function ColorPicker(props: ColorPickerProps) {
   const {} = props;
   const colors = useColors();
   const selectorPosition = useRef(new Animated.ValueXY()).current;
-  const selectedColor$ = useObservable<RGB>();
+  const selectedColor$ = useObservable<RGB>(WHITE_COLOR);
   const img$ = useObservable<GeneratedImage>();
   const coordinates$ = useObservable(COORDINATES);
 
@@ -79,10 +86,31 @@ export function ColorPicker(props: ColorPickerProps) {
     return () => interactionPromise.cancel();
   }, [img$]);
 
+  useEffect(() => {
+    const id = selectorPosition.addListener(v => {
+      const radius = 128;
+      const x = Math.floor(v.x + radius);
+      const y = Math.floor(v.y + radius);
+      const color = calculateColor({
+        height: 0,
+        radius: radius,
+        width: 0,
+        x: x,
+        y: y,
+      });
+      if (color) {
+        selectedColor$.set(color);
+      }
+    });
+
+    return () => {
+      selectorPosition.removeListener(id);
+    };
+  }, [selectedColor$, selectorPosition]);
+
   const panResponder = useRef(
     PanResponder.create({
       onPanResponderGrant: () => {
-        console.log('onPanResponderGrant');
         selectorPosition.setOffset({
           x: (selectorPosition.x as any)._value,
           y: (selectorPosition.y as any)._value,
@@ -178,8 +206,26 @@ export function ColorPicker(props: ColorPickerProps) {
                   <Pressable
                     onPress={event => {
                       const radius = 128;
-                      const x = event.nativeEvent.locationX - radius;
-                      const y = event.nativeEvent.locationY - radius;
+                      let locationX = event.nativeEvent.locationX;
+                      let locationY = event.nativeEvent.locationY;
+
+                      if (Constants.IS_WEB) {
+                        const location: object = event.nativeEvent;
+                        if (
+                          !('offsetX' in location) ||
+                          !('offsetY' in location) ||
+                          typeof location.offsetX !== 'number' ||
+                          typeof location.offsetY !== 'number'
+                        ) {
+                          console.error('Pressable event has no location info');
+                        } else {
+                          locationX = location.offsetX;
+                          locationY = location.offsetY;
+                        }
+                      }
+
+                      const x = locationX - radius;
+                      const y = locationY - radius;
 
                       const isInTheCircle = x * x + y * y < radius * radius;
 
@@ -207,58 +253,6 @@ export function ColorPicker(props: ColorPickerProps) {
                         top: selectorPosition.y,
                       },
                     ]}
-                    onLayout={event => {
-                      const radius = 128;
-                      const { height, width, x, y } = event.nativeEvent.layout;
-                      const dx = x - radius + width / 2;
-                      const dy = y - radius + height / 2;
-
-                      let diffX2 = dx * dx;
-                      let diffY2 = dy * dy;
-
-                      const isInTheCircle = diffX2 + diffY2 < radius * radius;
-
-                      if (!isInTheCircle) {
-                        // console.log(
-                        //   'out of the circle',
-                        //   JSON.stringify({ height, width, dx, dy }, null, 2)
-                        // );
-                        return;
-                      }
-
-                      /** Angle in radians */
-                      let angle = Math.atan2(radius - y, radius - x);
-
-                      /** Convert it to degrees */
-                      angle = angle * (180 / Math.PI);
-                      while (angle < 0) {
-                        angle += 360;
-                      }
-                      while (angle > 360) {
-                        angle -= 360;
-                      }
-
-                      let distance = Math.sqrt(diffX2 + diffY2);
-                      const inter = interpolate(0, radius, 0, 1, distance);
-
-                      let color = hsv2rgb(angle, inter, 1);
-                      // if (diffX2 + diffY2 < RADIUS_SQ) {
-                      //   // console.log(d);
-                      // }
-
-                      // const cor = { ...color, a: alpaChannel };
-
-                      // console.log(
-                      //   'Ocolor',
-                      //   JSON.stringify({ height, width, dx, dy, cor }, null, 2)
-                      // );
-
-                      selectedColor$.set({
-                        r: color.r,
-                        g: color.g,
-                        b: color.b,
-                      });
-                    }}
                   />
                 </View>
               </View>
@@ -268,7 +262,7 @@ export function ColorPicker(props: ColorPickerProps) {
 
         <Memo>
           {() => {
-            const { b, g, r } = selectedColor$.get() ?? {};
+            const { b, g, r } = selectedColor$.get();
             return (
               <View
                 style={[
@@ -293,25 +287,43 @@ export function ColorPicker(props: ColorPickerProps) {
           </Row>
           <Row>
             <Memo>
-              {() => (
-                <Input defaultValue={selectedColor$.r.get()?.toString()} />
-              )}
+              {() => {
+                const r = selectedColor$.r.get()?.toString();
+                return (
+                  <Input
+                    key={Constants.IS_WEB ? r : undefined}
+                    defaultValue={r}
+                  />
+                );
+              }}
             </Memo>
             <Body>Red</Body>
           </Row>
           <Row>
             <Memo>
-              {() => (
-                <Input defaultValue={selectedColor$.g.get()?.toString()} />
-              )}
+              {() => {
+                const g = selectedColor$.g.get()?.toString();
+                return (
+                  <Input
+                    key={Constants.IS_WEB ? g : undefined}
+                    defaultValue={g}
+                  />
+                );
+              }}
             </Memo>
             <Body>Green</Body>
           </Row>
           <Row>
             <Memo>
-              {() => (
-                <Input defaultValue={selectedColor$.b.get()?.toString()} />
-              )}
+              {() => {
+                const b = selectedColor$.b.get()?.toString();
+                return (
+                  <Input
+                    key={Constants.IS_WEB ? b : undefined}
+                    defaultValue={b}
+                  />
+                );
+              }}
             </Memo>
             <Body>Blue</Body>
           </Row>
@@ -319,14 +331,13 @@ export function ColorPicker(props: ColorPickerProps) {
         <InputGroup>
           <Memo>
             {() => {
-              const { b, g, r } = selectedColor$.get() ?? {
-                r: 255,
-                g: 255,
-                b: 255,
-              };
+              const { b, g, r } = selectedColor$.get() ?? WHITE_COLOR;
+              const color =
+                `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`.toUpperCase();
               return (
                 <Input
-                  defaultValue={`#${r.toString(16)}${g.toString(16)}${b.toString(16)}`.toUpperCase()}
+                  key={Constants.IS_WEB ? color : undefined}
+                  defaultValue={color}
                 />
               );
             }}
@@ -452,3 +463,58 @@ const InputGroup = Styled.createStyledView({
   // borderColor: 'red',
   height: '100%',
 });
+
+interface CalculateColorProps {
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+  radius: number;
+}
+const calculateColor = (props: CalculateColorProps) => {
+  const { height, width, x, y, radius } = props;
+  const dx = x - radius + width / 2;
+  const dy = y - radius + height / 2;
+
+  let diffX2 = dx * dx;
+  let diffY2 = dy * dy;
+
+  const isInTheCircle = diffX2 + diffY2 < radius * radius;
+
+  if (!isInTheCircle) {
+    // console.log(
+    //   'out of the circle',
+    //   JSON.stringify({ height, width, dx, dy }, null, 2)
+    // );
+    return;
+  }
+
+  /** Angle in radians */
+  let angle = Math.atan2(radius - y, radius - x);
+
+  /** Convert it to degrees */
+  angle = angle * (180 / Math.PI);
+  while (angle < 0) {
+    angle += 360;
+  }
+  while (angle > 360) {
+    angle -= 360;
+  }
+
+  let distance = Math.sqrt(diffX2 + diffY2);
+  const inter = interpolate(0, radius, 0, 1, distance);
+
+  let color = hsv2rgb(angle, inter, 1);
+  // if (diffX2 + diffY2 < RADIUS_SQ) {
+  //   // console.log(d);
+  // }
+
+  // const cor = { ...color, a: alpaChannel };
+
+  // console.log(
+  //   'Ocolor',
+  //   JSON.stringify({ height, width, dx, dy, cor }, null, 2)
+  // );
+
+  return color;
+};
