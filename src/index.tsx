@@ -19,6 +19,7 @@ export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
 export { Menu } from './components/Menu/Menu';
 export { Constants } from './utils/constants';
+export { RootSDKViewDimensions$ } from './components/AppBackground';
 export {
   AppColorScheme$,
   ColorScheme$,
@@ -26,4 +27,9 @@ export {
   SetColorScheme,
 } from './contexts/colorScheme/color-scheme';
 export { Colors$ } from './contexts/colors/colors';
+export {
+  Breakpoint$,
+  useBreakpoints,
+  calculateBreakpoint,
+} from './hooks/useBreakpoints';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
