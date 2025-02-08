@@ -1,5 +1,11 @@
 import React, { useRef } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
 import { observable, ObservableHint } from '@legendapp/state';
@@ -77,10 +83,9 @@ interface RootSDKViewDimensions {
 }
 
 export const RootSDKViewDimensions$ = observable<RootSDKViewDimensions>({
+  ...Dimensions.get('window'),
   x: 0,
   y: 0,
-  height: 0,
-  width: 0,
   left: 0,
   top: 0,
 });
