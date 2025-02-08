@@ -32,4 +32,5 @@ export {
   useBreakpoints,
   calculateBreakpoint,
 } from './hooks/useBreakpoints';
+export { RadioButton } from './components/RadioButton/radio-button';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
