@@ -33,4 +33,5 @@ export {
   calculateBreakpoint,
 } from './hooks/useBreakpoints';
 export { RadioButton } from './components/RadioButton/radio-button';
+export { ResizableView } from './components/resizable-view';
 export type { PropsWithCustomHook } from './types/ComponentTypes';
