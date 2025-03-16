@@ -26,7 +26,7 @@ export {
   SystemColorScheme$,
   SetColorScheme,
 } from './contexts/colorScheme/color-scheme';
-export { Colors$ } from './contexts/colors/colors.values';
+export { Colors$, setColors } from './contexts/colors/colors.values';
 export {
   Breakpoint$,
   useBreakpoints,

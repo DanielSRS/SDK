@@ -125,3 +125,8 @@ export const Colors$ = observable<Colors>(() =>
     ? DEFAULT_LIGHT_COLORS.get()
     : DEFAULT_DARK_COLORS.get()
 );
+
+export function setColors(light: Partial<Colors>, dark: Partial<Colors>) {
+  DEFAULT_LIGHT_COLORS.assign(light);
+  DEFAULT_DARK_COLORS.assign(dark);
+}
