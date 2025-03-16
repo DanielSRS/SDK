@@ -1,6 +1,6 @@
 import { Memo, useObservable } from '@legendapp/state/react';
 import { Animated, StyleSheet } from 'react-native';
-import { Colors$ } from '../../contexts/colors/colors';
+import { Colors$ } from '../../contexts/colors/colors.values';
 import { Styled } from '../Styled';
 import { Body } from '../Text/Body';
 import { useRef } from 'react';
