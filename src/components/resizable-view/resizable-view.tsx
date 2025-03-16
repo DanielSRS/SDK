@@ -66,7 +66,7 @@ export const ResizableView = (props: ResizableContainerProps) => {
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gestureState) => {
         const diff = gestureState.moveX - offset.current;
-        console.log('diff: ', diff, gestureState.moveX);
+        // console.log('diff: ', diff, gestureState.moveX);
         const newWidht = diff > 0 ? diff : 0; // no negative values alowed
         const shouldUpdate =
           newWidht >= minWidthToResize &&
@@ -82,7 +82,7 @@ export const ResizableView = (props: ResizableContainerProps) => {
         } else {
           // offset.current = curr - gestureState.moveX;
         }
-        console.log('grant: ', gestureState.moveX);
+        // console.log('grant: ', gestureState.moveX);
       },
     })
   ).current;
