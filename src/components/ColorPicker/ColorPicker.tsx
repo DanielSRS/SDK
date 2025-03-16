@@ -18,7 +18,7 @@ import { interpolate } from '../../utils/linearInterpolation';
 import { hsv2rgb } from '../../utils/hsv2rgb';
 import { Body } from '../Text/Body';
 import { Memo, use$, useObservable } from '@legendapp/state/react';
-import { Colors$ } from '../../contexts/colors/colors';
+import { Colors$ } from '../../contexts/colors/colors.values';
 import { Styled } from '../Styled';
 import { Constants } from '../../utils/constants';
 
