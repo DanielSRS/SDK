@@ -13,6 +13,7 @@ import {
   useContext,
   useRef,
   useState,
+  type ReactNode,
 } from 'react';
 import { Body } from '../Text/Body';
 import { HoverIndicator } from '../HoverIndicator';
@@ -180,9 +181,11 @@ const IS_MAC_OS = Platform.OS === 'macos';
 
 interface MenuEntryProps extends Omit<TouchableOpacityProps, 'children'> {
   children: string;
+  left?: ReactNode | (() => ReactNode);
+  right?: ReactNode | (() => ReactNode);
 }
 const MenuEntry = function MenuEntry(props: MenuEntryProps) {
-  const { children, onPress, ...rest } = props;
+  const { children, left, right, onPress, ...rest } = props;
   const close = useContext(ClosesMenuContext);
 
   const onMenuPress = useCallback(
@@ -197,14 +200,23 @@ const MenuEntry = function MenuEntry(props: MenuEntryProps) {
     <MenuEntryContainer {...rest} onPress={onMenuPress}>
       <MenuEntryHoverContainer>
         <HoverIndicator />
+        {!!left && renderFunctionOrNode(left)}
         {IS_MAC_OS && <Caption style={ignoreMouseEvents}>{children}</Caption>}
         {!IS_MAC_OS && <Body style={ignoreMouseEvents}>{children}</Body>}
+        {!!right && renderFunctionOrNode(right)}
       </MenuEntryHoverContainer>
     </MenuEntryContainer>
   );
 };
 
-const ignoreMouseEvents = { pointerEvents: 'none' } as const;
+function renderFunctionOrNode(item?: ReactNode | (() => ReactNode)) {
+  if (typeof item === 'function') {
+    return item();
+  }
+  return item;
+}
+
+const ignoreMouseEvents = { pointerEvents: 'none', flex: 1 } as const;
 
 Menu.MenuEntry = MenuEntry;
 
@@ -244,7 +256,9 @@ const MenuEntryHoverContainer = Styled.createStyledView({
   paddingHorizontal: 11,
   borderRadius: 3,
   overflow: 'hidden',
-  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'row',
+  columnGap: 12,
 });
 
 const bshadow = {
