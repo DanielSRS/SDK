@@ -8,7 +8,7 @@ import {
   Subtitle,
   Title,
   TitleLarge,
-} from 'react-native-sdk';
+} from '@danielsrs/react-native-sdk';
 
 export function Text() {
   return (

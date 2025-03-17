@@ -7,7 +7,7 @@ import {
   RootSDKViewDimensions$,
   Styled,
   SystemColorScheme$,
-} from 'react-native-sdk';
+} from '@danielsrs/react-native-sdk';
 
 export function Observables() {
   return (

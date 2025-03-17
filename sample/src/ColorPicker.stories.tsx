@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ColorPicker } from 'react-native-sdk';
+import { ColorPicker } from '@danielsrs/react-native-sdk';
 
 const meta = {
   title: 'ColorPicker',

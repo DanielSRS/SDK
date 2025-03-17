@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Menu } from 'react-native-sdk';
+import { Menu } from '@danielsrs/react-native-sdk';
 
 const meta = {
   title: 'MenuEntry',

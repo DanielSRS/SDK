@@ -1,5 +1,5 @@
 import type { Meta } from '@storybook/react';
-import { ResizableView, Colors$ } from 'react-native-sdk';
+import { ResizableView, Colors$ } from '@danielsrs/react-native-sdk';
 
 export default {
   title: 'Components/ResizableView',

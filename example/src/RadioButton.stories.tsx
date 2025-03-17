@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { RadioButton } from 'react-native-sdk';
+import { RadioButton } from '@danielsrs/react-native-sdk';
 
 const meta = {
   title: 'RadioButton',

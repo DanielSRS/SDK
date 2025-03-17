@@ -13,7 +13,7 @@ yarn add react-native-sdk
 ### Wrap your app content with SdkProvider
 
 ```Typescript
-import { SdkProvider } from 'react-native-sdk';
+import { SdkProvider } from '@danielsrs/react-native-sdk';
 
 export default function App() {
   return (
@@ -36,12 +36,12 @@ Create styled components. Makes code ease to read
     <th> Result </th>
   </tr>
   <tr>
-  
+
   <td>
 
   ```Typescript
   import { View } from 'react-native';
-  import { Styled } from 'react-native-sdk';
+  import { Styled } from '@danielsrs/react-native-sdk';
 
   export function StyledExample() {
     return (
@@ -82,13 +82,13 @@ Position children in a z stack
     <th> Result </th>
   </tr>
   <tr>
-  
+
   <td>
 
   ```Typescript
   import { useRef } from 'react';
   import { StyleSheet, View } from 'react-native';
-  import { Styled, ZStack } from 'react-native-sdk';
+  import { Styled, ZStack } from '@danielsrs/react-native-sdk';
 
   export function ZStackS() {
     const viewRef = useRef<View>(null);

@@ -16,7 +16,7 @@ import {
   Slider,
   ToggleButton,
   ColorPicker,
-} from 'react-native-sdk';
+} from '@danielsrs/react-native-sdk';
 
 export function Test() {
   const { setAppColorScheme } = useSchemeControl();

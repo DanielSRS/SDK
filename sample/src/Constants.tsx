@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { Body, Constants } from 'react-native-sdk';
+import { Body, Constants } from '@danielsrs/react-native-sdk';
 
 export function ConstantsList() {
   return (

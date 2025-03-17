@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Styled } from 'react-native-sdk';
+import { Styled } from '@danielsrs/react-native-sdk';
 
 export function StyledExample() {
   return (

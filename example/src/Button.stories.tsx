@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from 'react-native-sdk';
+import { Button } from '@danielsrs/react-native-sdk';
 
 const meta = {
   title: 'Button',

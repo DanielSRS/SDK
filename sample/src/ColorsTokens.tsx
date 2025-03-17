@@ -1,5 +1,5 @@
 import { ScrollView, View, type ColorValue } from 'react-native';
-import { Body, useColors } from 'react-native-sdk';
+import { Body, useColors } from '@danielsrs/react-native-sdk';
 
 export const ColorsTokens = () => {
   const colorTokens = useColors();

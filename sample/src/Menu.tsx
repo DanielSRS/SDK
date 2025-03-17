@@ -1,4 +1,4 @@
-import { Menu, Styled, Caption } from 'react-native-sdk';
+import { Menu, Styled, Caption } from '@danielsrs/react-native-sdk';
 
 export const MenuExample = () => {
   return (

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { useSchemeControl, Button } from 'react-native-sdk';
+import { useSchemeControl, Button } from '@danielsrs/react-native-sdk';
 
 export function Theme() {
   const { setAppColorScheme } = useSchemeControl();
