@@ -1,5 +1,5 @@
 {
-  "name": "react-native-sdk",
+  "name": "@danielsrs/react-native-sdk",
   "version": "0.1.0",
   "description": "A SDK from building react native apps",
   "source": "./src/index.tsx",
@@ -44,7 +44,10 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "macos",
+    "windows",
+    "web"
   ],
   "repository": {
     "type": "git",
