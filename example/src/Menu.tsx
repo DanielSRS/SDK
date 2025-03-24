@@ -1,14 +1,19 @@
-import { Menu, Styled } from '@danielsrs/react-native-sdk';
+import { Menu, Styled, Caption } from '@danielsrs/react-native-sdk';
 
 export const MenuExample = () => {
   return (
     <Container>
       <Top>
         <Menu target={<MiniRedSquaare />}>
-          <Menu.MenuEntry onPress={() => console.log('Entrada')}>
+          <Menu.MenuEntry
+            onPress={() => console.log('Entrada')}
+            left={<Icon />}>
             Top left
           </Menu.MenuEntry>
-          <Menu.MenuEntry onPress={() => console.log('Opção')}>
+          <Menu.MenuEntry
+            onPress={() => console.log('Opção')}
+            left={icon}
+            right={hint}>
             Red
           </Menu.MenuEntry>
         </Menu>
@@ -67,6 +72,15 @@ export const MenuExample = () => {
 const Container = Styled.createStyledView({
   flex: 1,
 });
+
+const Icon = Styled.createStyledView({
+  width: 16,
+  height: 16,
+  borderWidth: 1,
+  borderRadius: 16,
+});
+const icon = () => <Icon />;
+const hint = () => <Caption>CTR+D</Caption>;
 
 const MiniRedSquaare = Styled.createStyledView({
   width: 42,
