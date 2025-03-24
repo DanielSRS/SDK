@@ -1,18 +1,18 @@
-# react-native-sdk
+# @danielsrs/react-native-sdk
 
 A SDK from building react native apps
 
 ## Installation
 
 ```sh
-yarn add react-native-sdk
+yarn add @danielsrs/react-native-sdk
 ```
 
 ## Usage
 
 ### Wrap your app content with SdkProvider
 
-```Typescript
+```tsx
 import { SdkProvider } from '@danielsrs/react-native-sdk';
 
 export default function App() {
@@ -39,7 +39,7 @@ Create styled components. Makes code ease to read
 
   <td>
 
-  ```Typescript
+  ```tsx
   import { View } from 'react-native';
   import { Styled } from '@danielsrs/react-native-sdk';
 
@@ -85,7 +85,7 @@ Position children in a z stack
 
   <td>
 
-  ```Typescript
+  ```tsx
   import { useRef } from 'react';
   import { StyleSheet, View } from 'react-native';
   import { Styled, ZStack } from '@danielsrs/react-native-sdk';
