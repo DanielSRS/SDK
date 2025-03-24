@@ -158,7 +158,7 @@ export const Menu = function Menu(props: MenuProps) {
                       layout.current.width,
                   left: showOnLeft() ? layout.current.x : undefined,
                   backgroundColor:
-                    colors.backgroundFillColorAcrylicBackgroundDefault,
+                    colors.backgroundFillColorLayerOnAcrylicDefault,
                   // backgroundColor: 'red',
                   ...(!suportsBoxShadow && {
                     backgroundColor:
