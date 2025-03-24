@@ -166,6 +166,7 @@ export const Menu = function Menu(props: MenuProps) {
                   }),
                   borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
+                  ...backdropFilter,
                 }}>
                 {children}
               </MenuContainer>
@@ -175,6 +176,10 @@ export const Menu = function Menu(props: MenuProps) {
       </VModal>
     </Container>
   );
+};
+
+const backdropFilter = {
+  backdropFilter: 'blur(20px)',
 };
 
 const IS_MAC_OS = Platform.OS === 'macos';
