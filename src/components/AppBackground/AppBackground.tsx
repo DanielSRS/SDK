@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import {
   Dimensions,
   Platform,
+  PlatformColor,
   StatusBar,
   StyleSheet,
   View,
@@ -9,8 +10,9 @@ import {
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
 import { observable, ObservableHint } from '@legendapp/state';
-import type { LayoutChangeEvent } from 'react-native';
 import { useMount } from '@legendapp/state/react';
+import { Constants } from '../../utils/constants';
+import type { LayoutChangeEvent } from 'react-native';
 
 const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
 
@@ -19,10 +21,15 @@ export const RootViewRef$ = observable<React.RefObject<View>>();
 interface AppBackgroundProps {
   children: React.ReactNode;
   transparentBackground?: boolean;
+  useAcrylic?: boolean;
 }
 
 export const AppBackground = (props: AppBackgroundProps) => {
-  const { children, transparentBackground } = props;
+  const {
+    children,
+    transparentBackground = Constants.IS_WINDOWS ? false : undefined,
+    useAcrylic = Constants.IS_WINDOWS,
+  } = props;
   const rootViewRef = useRef<View>(null);
   const currentTheme = useColorScheme();
   useMount(() => {
@@ -31,7 +38,10 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const colors = useColors();
   const isDark = currentTheme === 'dark';
   const backgroundColor = {
-    backgroundColor: colors.backgroundFillColorSolidBackgroundBase,
+    backgroundColor:
+      useAcrylic && Constants.IS_WINDOWS
+        ? AcrylicBrush('AcrylicBackgroundFillColorDefaultBrush')
+        : colors.backgroundFillColorSolidBackgroundBase,
   };
 
   const showBgColor = !(transparentBackground ?? SUPORTS_WINDOW);
@@ -94,3 +104,21 @@ const updateRootViewDimensions = (event: LayoutChangeEvent) => {
   const layout = event.nativeEvent.layout;
   RootSDKViewDimensions$.set(layout);
 };
+
+// https://github.com/microsoft/microsoft-ui-xaml/blob/6aed8d97fdecfe9b19d70c36bd1dacd9c6add7c1/dev/Materials/Acrylic/AcrylicBrush_19h1_themeresources.xaml#L11
+
+function AcrylicBrush(name: PreDefinedAcrylicBrush) {
+  return PlatformColor(name);
+}
+
+type PreDefinedAcrylicBrush =
+  | 'AcrylicBackgroundFillColorDefaultBrush'
+  | 'AcrylicBackgroundFillColorDefaultInverseBrush'
+  | 'AcrylicInAppFillColorDefaultInverseBrush'
+  | 'AcrylicBackgroundFillColorBaseBrush'
+  | 'AcrylicInAppFillColorBaseBrush'
+  | 'AccentAcrylicBackgroundFillColorDefaultBrush'
+  | 'AccentAcrylicInAppFillColorDefaultBrush'
+  | 'AccentAcrylicBackgroundFillColorBaseBrush'
+  | 'AccentAcrylicInAppFillColorBaseBrush'
+  | 'AcrylicInAppFillColorDefaultBrush';
