@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import {
+  Appearance,
   Dimensions,
   Platform,
   PlatformColor,
@@ -10,9 +11,12 @@ import {
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
 import { observable, ObservableHint } from '@legendapp/state';
-import { useMount } from '@legendapp/state/react';
+import { use$, useMount } from '@legendapp/state/react';
 import { Constants } from '../../utils/constants';
+import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import type { LayoutChangeEvent } from 'react-native';
+
+const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
 
 const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
 
@@ -31,7 +35,9 @@ export const AppBackground = (props: AppBackgroundProps) => {
     useAcrylic = Constants.IS_WINDOWS,
   } = props;
   const rootViewRef = useRef<View>(null);
+  const systemScheme = use$(SystemColorScheme$);
   const currentTheme = useColorScheme();
+  const colorSchemeMismatch = currentTheme !== systemScheme;
   useMount(() => {
     RootViewRef$.set(ObservableHint.opaque(rootViewRef));
   });
@@ -40,7 +46,20 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const backgroundColor = {
     backgroundColor:
       useAcrylic && Constants.IS_WINDOWS
-        ? AcrylicBrush('AcrylicBackgroundFillColorDefaultBrush')
+        ? AcrylicBrush(
+            (() => {
+              if (colorSchemeMismatch) {
+                if (currentTheme === INITAL_COLOR_SCHEME) {
+                  return 'AcrylicBackgroundFillColorDefaultBrush';
+                }
+                return 'AcrylicBackgroundFillColorDefaultInverseBrush';
+              }
+              if (systemScheme !== INITAL_COLOR_SCHEME) {
+                return 'AcrylicBackgroundFillColorDefaultInverseBrush';
+              }
+              return 'AcrylicBackgroundFillColorDefaultBrush';
+            })()
+          )
         : colors.backgroundFillColorSolidBackgroundBase,
   };
 
