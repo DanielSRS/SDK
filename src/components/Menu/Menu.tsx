@@ -271,7 +271,7 @@ const MenuEntryContainer = Styled.createStyledTouchableOpacity({
 });
 
 const MenuEntryHoverContainer = Styled.createStyledView({
-  minHeight: IS_MAC_OS ? 32 : 36,
+  minHeight: 32,
   // backgroundColor: 'blue',
   paddingHorizontal: 11,
   borderRadius: 3,
