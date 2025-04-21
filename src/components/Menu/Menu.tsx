@@ -1,5 +1,7 @@
 import {
+  Appearance,
   Platform,
+  PlatformColor,
   Pressable,
   StyleSheet,
   View,
@@ -20,11 +22,16 @@ import { HoverIndicator } from '../HoverIndicator';
 import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
 import { Caption } from '../Text/Caption';
-import { suportsBoxShadow } from '../../utils/constants';
+import { Constants, suportsBoxShadow } from '../../utils/constants';
 import {
   RootSDKViewDimensions$,
   RootViewRef$,
 } from '../AppBackground/AppBackground';
+import { useColorScheme } from '../../hooks/useColorSheme';
+import { use$ } from '@legendapp/state/react';
+import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
+
+const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
 
 const ClosesMenuContext = createContext(() => {});
 /**
@@ -59,6 +66,8 @@ export const Menu = function Menu(props: MenuProps) {
     ww: 0,
   });
   const childrenContainerRef = useRef<View>(null);
+  const systemScheme = use$(SystemColorScheme$);
+  const currentTheme = useColorScheme();
   const colors = useColors();
 
   const showOnLeft = () => layout.current.x < layout.current.ww / 2;
@@ -163,6 +172,12 @@ export const Menu = function Menu(props: MenuProps) {
                   ...(!suportsBoxShadow && {
                     backgroundColor:
                       colors.backgroundFillColorSolidBackgroundBase,
+                  }),
+                  ...(Constants.IS_WINDOWS && {
+                    backgroundColor: MenuAcrylicBrush(
+                      systemScheme,
+                      currentTheme
+                    ),
                   }),
                   borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
@@ -283,3 +298,40 @@ const shadow = suportsBoxShadow
 
       elevation: 24,
     };
+
+function AcrylicBrush(name: PreDefinedAcrylicBrush) {
+  return PlatformColor(name);
+}
+
+function MenuAcrylicBrush(
+  systemScheme: 'light' | 'dark',
+  currentTheme: ReturnType<typeof useColorScheme>
+) {
+  const colorSchemeMismatch = currentTheme !== systemScheme;
+  return AcrylicBrush(
+    (() => {
+      if (colorSchemeMismatch) {
+        if (currentTheme === INITAL_COLOR_SCHEME) {
+          return 'AcrylicBackgroundFillColorDefaultBrush';
+        }
+        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
+      }
+      if (systemScheme !== INITAL_COLOR_SCHEME) {
+        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
+      }
+      return 'AcrylicBackgroundFillColorDefaultBrush';
+    })()
+  );
+}
+
+type PreDefinedAcrylicBrush =
+  | 'AcrylicBackgroundFillColorDefaultBrush'
+  | 'AcrylicBackgroundFillColorDefaultInverseBrush'
+  | 'AcrylicInAppFillColorDefaultInverseBrush'
+  | 'AcrylicBackgroundFillColorBaseBrush'
+  | 'AcrylicInAppFillColorBaseBrush'
+  | 'AccentAcrylicBackgroundFillColorDefaultBrush'
+  | 'AccentAcrylicInAppFillColorDefaultBrush'
+  | 'AccentAcrylicBackgroundFillColorBaseBrush'
+  | 'AccentAcrylicInAppFillColorBaseBrush'
+  | 'AcrylicInAppFillColorDefaultBrush';
