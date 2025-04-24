@@ -18,7 +18,7 @@ import type { Layout, MenuProps } from './menu.types';
 const DISTANCE_FROM_TARGET = 8;
 
 export const Menu = function Menu(props: MenuProps) {
-  const { children, target } = props;
+  const { children, target, maxWidth = 350, minWidth = 150 } = props;
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const layout = useRef<Layout>({
     height: 0,
@@ -117,6 +117,8 @@ export const Menu = function Menu(props: MenuProps) {
                   borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
                   ...backdropFilter,
+                  minWidth,
+                  maxWidth,
                 }}>
                 {children}
               </MenuContainer>
@@ -141,8 +143,6 @@ const MenuContainer = Styled.createStyledView({
   paddingVertical: 2,
   // borderWidth: StyleSheet.hairlineWidth,
   borderWidth: 1,
-  maxWidth: 350,
-  minWidth: 250,
   borderRadius: 7,
   position: 'absolute',
 });
