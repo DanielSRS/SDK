@@ -17,7 +17,7 @@ export { ColorPicker } from './components/ColorPicker';
 export { pickFile } from './api/file-picker';
 export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
-export { Menu } from './components/Menu/Menu';
+export { Menu } from './components/Menu/menu';
 export { Constants } from './utils/constants';
 export { RootSDKViewDimensions$ } from './components/AppBackground';
 export {

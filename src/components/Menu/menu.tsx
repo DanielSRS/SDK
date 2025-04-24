@@ -1,59 +1,22 @@
-import {
-  Appearance,
-  Platform,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  View,
-  type GestureResponderEvent,
-  type TouchableOpacityProps,
-} from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Styled } from '../Styled';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
-import { Body } from '../Text/Body';
-import { HoverIndicator } from '../HoverIndicator';
+import { useCallback, useRef, useState } from 'react';
 import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
-import { Caption } from '../Text/Caption';
 import { Constants, suportsBoxShadow } from '../../utils/constants';
-import {
-  RootSDKViewDimensions$,
-  RootViewRef$,
-} from '../AppBackground/AppBackground';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { use$ } from '@legendapp/state/react';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
+import { MenuEntry } from './components/menu-entry';
+import { ClosesMenuContext } from './components/close-menu-context';
+import { measureViewInWindow, MenuAcrylicBrush } from './menu.utils';
+import type { Layout, MenuProps } from './menu.types';
 
-const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
-
-const ClosesMenuContext = createContext(() => {});
 /**
  * Distancia (para separar) entre o menu e target
  */
 const DISTANCE_FROM_TARGET = 8;
 
-interface Layout {
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  /** window height */
-  wh: number;
-  /** window width */
-  ww: number;
-}
-
-interface MenuProps {
-  children: React.ReactNode;
-  target: React.ReactNode;
-}
 export const Menu = function Menu(props: MenuProps) {
   const { children, target } = props;
   const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -74,35 +37,7 @@ export const Menu = function Menu(props: MenuProps) {
   const showOnTop = () => layout.current.y < layout.current.wh / 2;
 
   const measureChildrenPosition = useCallback(
-    () =>
-      new Promise<Layout>((resolve, _reject) => {
-        // const i = Date.now();
-        const rootViewRef = RootViewRef$.peek()?.current;
-        if (!rootViewRef) {
-          return;
-        }
-        childrenContainerRef.current?.measureLayout(
-          rootViewRef,
-          (left, top, width, height) => {
-            const sdkrootview = RootSDKViewDimensions$.peek();
-            const _layout = {
-              x: left,
-              y: top,
-              height,
-              width,
-              wh: sdkrootview.height,
-              ww: sdkrootview.width,
-            };
-            // const f = Date.now();
-            // console.log(
-            //   `medido em: ${f - i}ms \n`,
-            //   JSON.stringify(layout, null, 2)
-            // );
-            resolve(_layout);
-            layout.current = _layout;
-          }
-        );
-      }),
+    () => measureViewInWindow(childrenContainerRef, layout),
     []
   );
 
@@ -197,47 +132,6 @@ const backdropFilter = {
   backdropFilter: 'blur(20px)',
 };
 
-const IS_MAC_OS = Platform.OS === 'macos';
-
-interface MenuEntryProps extends Omit<TouchableOpacityProps, 'children'> {
-  children: string;
-  left?: ReactNode | (() => ReactNode);
-  right?: ReactNode | (() => ReactNode);
-}
-const MenuEntry = function MenuEntry(props: MenuEntryProps) {
-  const { children, left, right, onPress, ...rest } = props;
-  const close = useContext(ClosesMenuContext);
-
-  const onMenuPress = useCallback(
-    (event: GestureResponderEvent) => {
-      close();
-      onPress?.(event);
-    },
-    [close, onPress]
-  );
-
-  return (
-    <MenuEntryContainer {...rest} onPress={onMenuPress}>
-      <MenuEntryHoverContainer>
-        <HoverIndicator />
-        {!!left && renderFunctionOrNode(left)}
-        {IS_MAC_OS && <Caption style={ignoreMouseEvents}>{children}</Caption>}
-        {!IS_MAC_OS && <Body style={ignoreMouseEvents}>{children}</Body>}
-        {!!right && renderFunctionOrNode(right)}
-      </MenuEntryHoverContainer>
-    </MenuEntryContainer>
-  );
-};
-
-function renderFunctionOrNode(item?: ReactNode | (() => ReactNode)) {
-  if (typeof item === 'function') {
-    return item();
-  }
-  return item;
-}
-
-const ignoreMouseEvents = { pointerEvents: 'none', flex: 1 } as const;
-
 Menu.MenuEntry = MenuEntry;
 
 const Container = Styled.createStyledView({});
@@ -260,27 +154,6 @@ const MenuArea = Styled.createStyledView({
   // pointerEvents: 'box-only',
 });
 
-const MenuEntryContainer = Styled.createStyledTouchableOpacity({
-  // paddingHorizontal: 16,
-  // paddingVertical: 8,
-  // backgroundColor: 'black',
-  paddingHorizontal: 5,
-  paddingVertical: 2,
-  borderRadius: 4,
-  overflow: 'hidden',
-});
-
-const MenuEntryHoverContainer = Styled.createStyledView({
-  minHeight: 32,
-  // backgroundColor: 'blue',
-  paddingHorizontal: 11,
-  borderRadius: 3,
-  overflow: 'hidden',
-  alignItems: 'center',
-  flexDirection: 'row',
-  columnGap: 12,
-});
-
 const bshadow = {
   boxShadow: '10 10 43 0 rgba(0,0,0,0.59)',
 } as const;
@@ -298,40 +171,3 @@ const shadow = suportsBoxShadow
 
       elevation: 24,
     };
-
-function AcrylicBrush(name: PreDefinedAcrylicBrush) {
-  return PlatformColor(name);
-}
-
-function MenuAcrylicBrush(
-  systemScheme: 'light' | 'dark',
-  currentTheme: ReturnType<typeof useColorScheme>
-) {
-  const colorSchemeMismatch = currentTheme !== systemScheme;
-  return AcrylicBrush(
-    (() => {
-      if (colorSchemeMismatch) {
-        if (currentTheme === INITAL_COLOR_SCHEME) {
-          return 'AcrylicBackgroundFillColorDefaultBrush';
-        }
-        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
-      }
-      if (systemScheme !== INITAL_COLOR_SCHEME) {
-        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
-      }
-      return 'AcrylicBackgroundFillColorDefaultBrush';
-    })()
-  );
-}
-
-type PreDefinedAcrylicBrush =
-  | 'AcrylicBackgroundFillColorDefaultBrush'
-  | 'AcrylicBackgroundFillColorDefaultInverseBrush'
-  | 'AcrylicInAppFillColorDefaultInverseBrush'
-  | 'AcrylicBackgroundFillColorBaseBrush'
-  | 'AcrylicInAppFillColorBaseBrush'
-  | 'AccentAcrylicBackgroundFillColorDefaultBrush'
-  | 'AccentAcrylicInAppFillColorDefaultBrush'
-  | 'AccentAcrylicBackgroundFillColorBaseBrush'
-  | 'AccentAcrylicInAppFillColorBaseBrush'
-  | 'AcrylicInAppFillColorDefaultBrush';
