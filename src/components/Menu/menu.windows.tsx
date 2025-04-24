@@ -13,7 +13,13 @@ import { measureViewInWindow, MenuAcrylicBrush } from './menu.utils';
 import type { Layout, MenuProps } from './menu.types';
 
 export const Menu = function Menu(props: MenuProps) {
-  const { children, target, maxWidth = 350, minWidth = 150 } = props;
+  const {
+    children,
+    target,
+    maxWidth = 350,
+    minWidth = 150,
+    extendToTargetWidth,
+  } = props;
   const [showFlyout, setShowFlyout] = useState(false);
   const [enablePointer, setEnablePointer] = useState(false);
   const colors = useColors();
@@ -81,7 +87,10 @@ export const Menu = function Menu(props: MenuProps) {
               backgroundColor: MenuAcrylicBrush(systemScheme, currentTheme),
               pointerEvents,
               minWidth,
-              maxWidth,
+              maxWidth: extendToTargetWidth
+                ? Math.max(maxWidth, layout.current.width)
+                : maxWidth,
+              width: extendToTargetWidth ? layout.current.width : undefined,
             }}>
             <Acrylic
               style={{

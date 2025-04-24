@@ -4,7 +4,10 @@ export const MenuExample = () => {
   return (
     <Container>
       <Top>
-        <Menu target={<MiniRedSquaare />}>
+        <Menu
+          extendToTargetWidth
+          // maxWidth={600}
+          target={<MiniRedSquaare />}>
           <Menu.MenuEntry
             onPress={() => console.log('Entrada')}
             left={<Icon />}>
@@ -31,7 +34,7 @@ export const MenuExample = () => {
       <Middle>
         {}
         {}
-        <Menu target={<MiniBlackSquaare />}>
+        <Menu minWidth={150} maxWidth={200} target={<MiniBlackSquaare />}>
           <Menu.MenuEntry onPress={() => console.log('Entrada')}>
             Middle
           </Menu.MenuEntry>
@@ -83,7 +86,7 @@ const icon = () => <Icon />;
 const hint = () => <Caption>CTR+D</Caption>;
 
 const MiniRedSquaare = Styled.createStyledView({
-  width: 42,
+  width: 442,
   height: 42,
   backgroundColor: 'red',
   borderRadius: 8,

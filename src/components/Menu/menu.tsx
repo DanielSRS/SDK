@@ -18,7 +18,13 @@ import type { Layout, MenuProps } from './menu.types';
 const DISTANCE_FROM_TARGET = 8;
 
 export const Menu = function Menu(props: MenuProps) {
-  const { children, target, maxWidth = 350, minWidth = 150 } = props;
+  const {
+    children,
+    target,
+    maxWidth = 350,
+    minWidth = 150,
+    extendToTargetWidth,
+  } = props;
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const layout = useRef<Layout>({
     height: 0,
@@ -118,7 +124,10 @@ export const Menu = function Menu(props: MenuProps) {
                   ...shadow,
                   ...backdropFilter,
                   minWidth,
-                  maxWidth,
+                  maxWidth: extendToTargetWidth
+                    ? Math.max(maxWidth, layout.current.width)
+                    : maxWidth,
+                  width: extendToTargetWidth ? layout.current.width : undefined,
                 }}>
                 {children}
               </MenuContainer>

@@ -5,6 +5,7 @@ export interface MenuProps {
   target: ReactNode;
   maxWidth?: number;
   minWidth?: number;
+  extendToTargetWidth?: boolean;
 }
 
 export interface Layout {
