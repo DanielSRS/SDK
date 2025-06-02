@@ -6,6 +6,11 @@ import { Styled } from '../Styled';
 
 const modalContent$ = observable([] as React.ReactNode[]);
 
+/**
+ * VModalRoot is a component that renders the content of the modal.
+ * It is used to display the modal content when the VModal component is visible.
+ * It should be placed at the root of your application.
+ */
 export const VModalRoot = observer(function VModalRoot() {
   const children = modalContent$.get();
   const noChildToShow = React.Children.count(children) === 0;
@@ -24,6 +29,10 @@ const ModalRootView = Styled.createStyledView({
   flex: 1,
 });
 
+/**
+ * VModal is a modal implementation for platforms that do not support
+ * the native modal component, such as Windows, macOS, and web.
+ */
 export const VModal = observer(function VModal(props: ModalProps) {
   useEffect(() => {
     if (props.visible === false) {

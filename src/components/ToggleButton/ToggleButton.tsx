@@ -8,6 +8,12 @@ interface ToggleButtonProps
   initialValue?: boolean;
 }
 
+/**
+ * ToggleButton is a button that can be toggled on and off.
+ * It accepts an `initialValue` prop to set its initial state,
+ * and an `onChange` callback that is called when the button is toggled.
+ * The button's appearance changes based on its toggled state.
+ */
 export function ToggleButton(props: ToggleButtonProps) {
   const { initialValue = false, onChange } = props;
   const [isToggled, setIsToggled] = useState(initialValue);

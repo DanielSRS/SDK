@@ -14,6 +14,12 @@ interface SdkProviderProps {
   colorsProps?: WithoutChildren<ComponentProps<typeof ColorsProvider>>;
   appBackgroundProps?: WithoutChildren<ComponentProps<typeof AppBackground>>;
 }
+
+/**
+ * Context provider for the SDK.
+ * It is required to wrap your application with this provider
+ * to use the SDK features.
+ */
 export function SdkProvider(props: SdkProviderProps) {
   const { children, appBackgroundProps, colorSchemeProps, colorsProps } = props;
   return (

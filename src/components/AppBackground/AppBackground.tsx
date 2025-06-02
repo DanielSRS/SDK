@@ -28,6 +28,12 @@ interface AppBackgroundProps {
   useAcrylic?: boolean;
 }
 
+/**
+ * AppBackground is a component that provides a background for the application.
+ * It supports acrylic effects on Windows and can be transparent.
+ * It also handles color scheme mismatches between the system and the app.
+ * It should be used as the root view of the application.
+ */
 export const AppBackground = (props: AppBackgroundProps) => {
   const {
     children,

@@ -23,6 +23,10 @@ interface ResizableContainerProps extends ViewProps {
   readonly fromBottom?: boolean;
 }
 
+/**
+ * ResizableView is a component that allows you to resize its width and height.
+ * It can be resized from the right and/or bottom sides.
+ */
 export const ResizableView = (props: ResizableContainerProps) => {
   const {
     maxHeightToResize,

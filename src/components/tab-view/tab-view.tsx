@@ -17,6 +17,9 @@ export const anim = (value: Animated.Value, to: number) => () => {
   }).start();
 };
 
+/**
+ * TabView is a component that allows you to create a tabbed interface.
+ */
 export function TabView<T extends Route>(props: TabViewProps<T>) {
   const { routes, renderScene } = props;
   const screenIndex = useRef(new Animated.Value(0)).current;
