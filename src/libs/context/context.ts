@@ -1,4 +1,1 @@
-export {
-  createContext,
-  useContextSelector as useContext,
-} from 'use-context-selector';
+export { createContext, useContext } from 'react';
