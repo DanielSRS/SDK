@@ -1,3 +1,3 @@
 export { TabView } from './tab-view';
-export { routeList } from './tab-view.utils';
+export { routeList, sceneMap } from './tab-view.utils';
 export type {} from './tab-view.types';

@@ -1,4 +1,10 @@
-import { Body, Styled, TabView, routeList } from '@danielsrs/react-native-sdk';
+import {
+  Body,
+  Styled,
+  TabView,
+  routeList,
+  sceneMap,
+} from '@danielsrs/react-native-sdk';
 
 const ROUTES = routeList([
   {
@@ -15,29 +21,26 @@ const ROUTES = routeList([
   },
 ]);
 
+const SCENES = sceneMap<typeof ROUTES>({
+  first: () => (
+    <Screen1>
+      <Body>First</Body>
+    </Screen1>
+  ),
+  second: () => (
+    <Screen2>
+      <Body>Second</Body>
+    </Screen2>
+  ),
+  third: () => (
+    <Screen3>
+      <Body>Third</Body>
+    </Screen3>
+  ),
+});
+
 export function TabViewStory() {
-  return (
-    <TabView
-      routes={ROUTES}
-      renderScene={{
-        first: () => (
-          <Screen1>
-            <Body>First</Body>
-          </Screen1>
-        ),
-        second: () => (
-          <Screen2>
-            <Body>Second</Body>
-          </Screen2>
-        ),
-        third: () => (
-          <Screen3>
-            <Body>Third</Body>
-          </Screen3>
-        ),
-      }}
-    />
-  );
+  return <TabView routes={ROUTES} renderScene={SCENES} />;
 }
 
 const Screen1 = Styled.createStyledView({
