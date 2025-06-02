@@ -1,6 +1,6 @@
-import { Body, Styled, TabView } from '@danielsrs/react-native-sdk';
+import { Body, Styled, TabView, routeList } from '@danielsrs/react-native-sdk';
 
-const ROUTES = [
+const ROUTES = routeList([
   {
     key: 'first',
     title: 'First',
@@ -13,7 +13,7 @@ const ROUTES = [
     key: 'third',
     title: 'Third',
   },
-] as const;
+]);
 
 export function TabViewStory() {
   return (
