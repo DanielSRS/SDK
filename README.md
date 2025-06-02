@@ -629,28 +629,35 @@ Tab interface component for organizing content
   <td>
 
   ```tsx
-  import { TabView } from '@danielsrs/react-native-sdk';
+  import { TabView, routeList, sceneMap } from '@danielsrs/react-native-sdk';
 
-  const routes = [
+  const routes = routeList([
     { key: 'first', title: 'First Tab' },
     { key: 'second', title: 'Second Tab' },
     { key: 'third', title: 'Third Tab' }
-  ] as const;
+  ]);
+
+  const scenes = sceneMap<typeof routes>({
+    first: () => <Text>First Tab Content</Text>,
+    second: () => <Text>Second Tab Content</Text>,
+    third: () => <Text>Third Tab Content</Text>
+  });
 
   export function TabViewExample() {
     return (
       <TabView
         routes={routes}
         initialIndex={0}
-        renderScene={{
-          first: () => <Text>First Tab Content</Text>,
-          second: () => <Text>Second Tab Content</Text>,
-          third: () => <Text>Third Tab Content</Text>
-        }}
+        renderScene={scenes}
       />
     );
   }
   ```
+
+  **Utility Functions:**
+  - `routeList(routes)` - Type-safe route list creation with const assertion
+  - `sceneMap(scenes)` - Type-safe scene mapping with key validation
+  - `sceneMap<RouteType>(scenes)` - Scene mapping with route key constraints
 
   **Props:**
   - `routes: Route[]` - Tab configuration
