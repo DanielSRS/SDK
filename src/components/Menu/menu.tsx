@@ -9,7 +9,8 @@ import { use$ } from '@legendapp/state/react';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import { MenuEntry } from './components/menu-entry';
 import { ClosesMenuContext } from './components/close-menu-context';
-import { measureViewInWindow, MenuAcrylicBrush } from './menu.utils';
+import { measureViewInWindow } from './menu.utils';
+import { MenuAcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
 import type { Layout, MenuProps } from './menu.types';
 
 /**

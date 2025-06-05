@@ -3,7 +3,6 @@ import {
   Appearance,
   Dimensions,
   Platform,
-  PlatformColor,
   StatusBar,
   StyleSheet,
   View,
@@ -14,6 +13,7 @@ import { observable, ObservableHint } from '@legendapp/state';
 import { use$, useMount } from '@legendapp/state/react';
 import { Constants } from '../../utils/constants';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
+import { AcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
 import type { LayoutChangeEvent } from 'react-native';
 
 const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
@@ -129,21 +129,3 @@ const updateRootViewDimensions = (event: LayoutChangeEvent) => {
   const layout = event.nativeEvent.layout;
   RootSDKViewDimensions$.set(layout);
 };
-
-// https://github.com/microsoft/microsoft-ui-xaml/blob/6aed8d97fdecfe9b19d70c36bd1dacd9c6add7c1/dev/Materials/Acrylic/AcrylicBrush_19h1_themeresources.xaml#L11
-
-function AcrylicBrush(name: PreDefinedAcrylicBrush) {
-  return PlatformColor(name);
-}
-
-type PreDefinedAcrylicBrush =
-  | 'AcrylicBackgroundFillColorDefaultBrush'
-  | 'AcrylicBackgroundFillColorDefaultInverseBrush'
-  | 'AcrylicInAppFillColorDefaultInverseBrush'
-  | 'AcrylicBackgroundFillColorBaseBrush'
-  | 'AcrylicInAppFillColorBaseBrush'
-  | 'AccentAcrylicBackgroundFillColorDefaultBrush'
-  | 'AccentAcrylicInAppFillColorDefaultBrush'
-  | 'AccentAcrylicBackgroundFillColorBaseBrush'
-  | 'AccentAcrylicInAppFillColorBaseBrush'
-  | 'AcrylicInAppFillColorDefaultBrush';

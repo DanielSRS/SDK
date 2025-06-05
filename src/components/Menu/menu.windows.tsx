@@ -5,11 +5,12 @@ import { Styled } from '../Styled';
 import { useColors } from '../../hooks/useColors';
 import { MenuEntry } from './components/menu-entry';
 import { useColorScheme } from '../../hooks/useColorSheme';
+import { MenuAcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
 import { ClosesMenuContext } from './components/close-menu-context';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
+import { measureViewInWindow } from './menu.utils';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useCallback, useRef, useState } from 'react';
-import { measureViewInWindow, MenuAcrylicBrush } from './menu.utils';
 import type { Layout, MenuProps } from './menu.types';
 
 export const Menu = function Menu(props: MenuProps) {

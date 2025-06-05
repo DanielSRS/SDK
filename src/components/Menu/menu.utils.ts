@@ -1,13 +1,10 @@
-import { Appearance, PlatformColor, View } from 'react-native';
-import type { useColorScheme } from '../../hooks/useColorSheme';
+import { View } from 'react-native';
 import {
   RootSDKViewDimensions$,
   RootViewRef$,
 } from '../AppBackground/AppBackground';
 import type { MutableRefObject, RefObject } from 'react';
 import type { Layout } from './menu.types';
-
-const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
 
 export function measureViewInWindow(
   viewRef: RefObject<View>,
@@ -34,40 +31,3 @@ export function measureViewInWindow(
     });
   });
 }
-
-function AcrylicBrush(name: PreDefinedAcrylicBrush) {
-  return PlatformColor(name);
-}
-
-export function MenuAcrylicBrush(
-  systemScheme: 'light' | 'dark',
-  currentTheme: ReturnType<typeof useColorScheme>
-) {
-  const colorSchemeMismatch = currentTheme !== systemScheme;
-  return AcrylicBrush(
-    (() => {
-      if (colorSchemeMismatch) {
-        if (currentTheme === INITAL_COLOR_SCHEME) {
-          return 'AcrylicBackgroundFillColorDefaultBrush';
-        }
-        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
-      }
-      if (systemScheme !== INITAL_COLOR_SCHEME) {
-        return 'AcrylicBackgroundFillColorDefaultInverseBrush';
-      }
-      return 'AcrylicBackgroundFillColorDefaultBrush';
-    })()
-  );
-}
-
-type PreDefinedAcrylicBrush =
-  | 'AcrylicBackgroundFillColorDefaultBrush'
-  | 'AcrylicBackgroundFillColorDefaultInverseBrush'
-  | 'AcrylicInAppFillColorDefaultInverseBrush'
-  | 'AcrylicBackgroundFillColorBaseBrush'
-  | 'AcrylicInAppFillColorBaseBrush'
-  | 'AccentAcrylicBackgroundFillColorDefaultBrush'
-  | 'AccentAcrylicInAppFillColorDefaultBrush'
-  | 'AccentAcrylicBackgroundFillColorBaseBrush'
-  | 'AccentAcrylicInAppFillColorBaseBrush'
-  | 'AcrylicInAppFillColorDefaultBrush';
