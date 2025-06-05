@@ -10,7 +10,7 @@ import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import { MenuEntry } from './components/menu-entry';
 import { ClosesMenuContext } from './components/close-menu-context';
 import { measureViewInWindow } from './menu.utils';
-import { MenuAcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
+import { MenuAcrylicBrush } from '../../api/acrylic-brush/acrylic-brush';
 import type { Layout, MenuProps } from './menu.types';
 
 /**

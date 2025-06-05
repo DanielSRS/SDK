@@ -5,7 +5,7 @@ import { Styled } from '../Styled';
 import { useColors } from '../../hooks/useColors';
 import { MenuEntry } from './components/menu-entry';
 import { useColorScheme } from '../../hooks/useColorSheme';
-import { MenuAcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
+import { MenuAcrylicBrush } from '../../api/acrylic-brush/acrylic-brush';
 import { ClosesMenuContext } from './components/close-menu-context';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import { measureViewInWindow } from './menu.utils';

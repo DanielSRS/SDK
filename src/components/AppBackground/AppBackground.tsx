@@ -13,7 +13,7 @@ import { observable, ObservableHint } from '@legendapp/state';
 import { use$, useMount } from '@legendapp/state/react';
 import { Constants } from '../../utils/constants';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
-import { AcrylicBrush } from '../../api/file-picker/acrylic-brush/acrylic-brush';
+import { AcrylicBrush } from '../../api/acrylic-brush/acrylic-brush';
 import type { LayoutChangeEvent } from 'react-native';
 
 const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';

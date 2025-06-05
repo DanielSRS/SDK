@@ -1,4 +1,4 @@
-import type { useColorScheme } from '../../../hooks/useColorSheme';
+import type { useColorScheme } from '../../hooks/useColorSheme';
 
 export function AcrylicBrush(name: PreDefinedAcrylicBrush) {
   return name;

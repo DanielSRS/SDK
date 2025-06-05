@@ -1,5 +1,5 @@
 import { Appearance, PlatformColor } from 'react-native';
-import type { useColorScheme } from '../../../hooks/useColorSheme';
+import type { useColorScheme } from '../../hooks/useColorSheme';
 
 const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
 
