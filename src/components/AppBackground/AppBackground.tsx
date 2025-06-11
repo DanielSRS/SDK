@@ -3,7 +3,6 @@ import {
   Appearance,
   Dimensions,
   Platform,
-  StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
@@ -48,7 +47,6 @@ export const AppBackground = (props: AppBackgroundProps) => {
     RootViewRef$.set(ObservableHint.opaque(rootViewRef));
   });
   const colors = useColors();
-  const isDark = currentTheme === 'dark';
   const backgroundColor = {
     backgroundColor:
       useAcrylic && Constants.IS_WINDOWS
@@ -80,11 +78,6 @@ export const AppBackground = (props: AppBackgroundProps) => {
         // { paddingTop: statusbarHeight },
         showBgColor && backgroundColor,
       ]}>
-      <StatusBar
-        backgroundColor={'transparent'}
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        translucent={true}
-      />
       {children}
     </View>
   );
