@@ -12,15 +12,15 @@ import type { MenuEntryProps } from './menu-entry.types';
 const ignoreMouseEvents = { pointerEvents: 'none', flex: 1 } as const;
 
 export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
-  const { children, left, right, onPress, ...rest } = props;
+  const { children, left, right, onPress, closeMenuOnPress, ...rest } = props;
   const close = useContext(ClosesMenuContext);
 
   const onMenuPress = useCallback(
     (event: GestureResponderEvent) => {
-      close();
+      closeMenuOnPress && close();
       onPress?.(event);
     },
-    [close, onPress]
+    [close, onPress, closeMenuOnPress]
   );
 
   return (

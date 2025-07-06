@@ -6,4 +6,5 @@ export interface MenuEntryProps
   children: string;
   left?: ReactNode | (() => ReactNode);
   right?: ReactNode | (() => ReactNode);
+  closeMenuOnPress?: boolean;
 }
