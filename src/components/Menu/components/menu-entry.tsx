@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { Fragment, useCallback, useContext, useMemo } from 'react';
 import { Styled } from '../../Styled';
 import { HoverIndicator } from '../../HoverIndicator';
 import { Caption } from '../../Text/Caption';
@@ -15,6 +15,13 @@ export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
   const { children, left, right, onPress, closeMenuOnPress, ...rest } = props;
   const close = useContext(ClosesMenuContext);
 
+  const ChildrenWrapper = useMemo(() => {
+    if (typeof children === 'function') {
+      return Fragment;
+    }
+    return Constants.IS_MACOS ? Caption : Body;
+  }, [children]);
+
   const onMenuPress = useCallback(
     (event: GestureResponderEvent) => {
       closeMenuOnPress && close();
@@ -28,12 +35,7 @@ export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
       <MenuEntryHoverContainer>
         <HoverIndicator />
         {!!left && renderFunctionOrNode(left)}
-        {Constants.IS_MACOS && (
-          <Caption style={ignoreMouseEvents}>{children}</Caption>
-        )}
-        {!Constants.IS_MACOS && (
-          <Body style={ignoreMouseEvents}>{children}</Body>
-        )}
+        <ChildrenWrapper style={ignoreMouseEvents}>{children}</ChildrenWrapper>
         {!!right && renderFunctionOrNode(right)}
       </MenuEntryHoverContainer>
     </MenuEntryContainer>

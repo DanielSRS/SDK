@@ -3,7 +3,7 @@ import type { TouchableOpacityProps } from 'react-native';
 
 export interface MenuEntryProps
   extends Omit<TouchableOpacityProps, 'children'> {
-  children: string;
+  children: ReactNode;
   left?: ReactNode | (() => ReactNode);
   right?: ReactNode | (() => ReactNode);
   closeMenuOnPress?: boolean;
