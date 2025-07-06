@@ -17,7 +17,7 @@ export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
     left,
     right,
     onPress,
-    closeMenuOnPress,
+    closeMenuOnPress = true,
     ignoreMouseEvents: ignoreMouse = true,
     ...rest
   } = props;
