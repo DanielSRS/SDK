@@ -7,7 +7,7 @@ export interface MenuProps {
   maxWidth?: number;
   minWidth?: number;
   extendToTargetWidth?: boolean;
-  menuContainer?: FC<Pick<ViewProps, 'style'>>;
+  menuContainer?: FC<Pick<ViewProps, 'style' | 'children'>>;
 }
 
 export interface Layout {
