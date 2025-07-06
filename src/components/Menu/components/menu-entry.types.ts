@@ -7,4 +7,5 @@ export interface MenuEntryProps
   left?: ReactNode | (() => ReactNode);
   right?: ReactNode | (() => ReactNode);
   closeMenuOnPress?: boolean;
+  ignoreMouseEvents?: boolean;
 }

@@ -12,7 +12,15 @@ import type { MenuEntryProps } from './menu-entry.types';
 const ignoreMouseEvents = { pointerEvents: 'none', flex: 1 } as const;
 
 export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
-  const { children, left, right, onPress, closeMenuOnPress, ...rest } = props;
+  const {
+    children,
+    left,
+    right,
+    onPress,
+    closeMenuOnPress,
+    ignoreMouseEvents: ignoreMouse = true,
+    ...rest
+  } = props;
   const close = useContext(ClosesMenuContext);
 
   const ChildrenWrapper = useMemo(() => {
@@ -35,7 +43,9 @@ export const MenuEntry = function MenuEntry(props: MenuEntryProps) {
       <MenuEntryHoverContainer>
         <HoverIndicator />
         {!!left && renderFunctionOrNode(left)}
-        <ChildrenWrapper style={ignoreMouseEvents}>{children}</ChildrenWrapper>
+        <ChildrenWrapper style={ignoreMouse ? ignoreMouseEvents : undefined}>
+          {children}
+        </ChildrenWrapper>
         {!!right && renderFunctionOrNode(right)}
       </MenuEntryHoverContainer>
     </MenuEntryContainer>
