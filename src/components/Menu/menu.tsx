@@ -3,14 +3,10 @@ import { Styled } from '../Styled';
 import { useCallback, useRef, useState } from 'react';
 import { useColors } from '../../hooks/useColors';
 import { VModal } from '../VModal/VModal';
-import { Constants, suportsBoxShadow } from '../../utils/constants';
-import { useColorScheme } from '../../hooks/useColorSheme';
-import { use$ } from '@legendapp/state/react';
-import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
+import { suportsBoxShadow } from '../../utils/constants';
 import { MenuEntry } from './components/menu-entry';
 import { ClosesMenuContext } from './components/close-menu-context';
 import { measureViewInWindow } from './menu.utils';
-import { MenuAcrylicBrush } from '../../api/acrylic-brush/acrylic-brush';
 import type { Layout, MenuProps } from './menu.types';
 
 /**
@@ -36,8 +32,6 @@ export const Menu = function Menu(props: MenuProps) {
     ww: 0,
   });
   const childrenContainerRef = useRef<View>(null);
-  const systemScheme = use$(SystemColorScheme$);
-  const currentTheme = useColorScheme();
   const colors = useColors();
 
   const showOnLeft = () => layout.current.x < layout.current.ww / 2;
@@ -109,18 +103,7 @@ export const Menu = function Menu(props: MenuProps) {
                       layout.current.width,
                   left: showOnLeft() ? layout.current.x : undefined,
                   backgroundColor:
-                    colors.backgroundFillColorLayerOnAcrylicDefault,
-                  // backgroundColor: 'red',
-                  ...(!suportsBoxShadow && {
-                    backgroundColor:
-                      colors.backgroundFillColorSolidBackgroundBase,
-                  }),
-                  ...(Constants.IS_WINDOWS && {
-                    backgroundColor: MenuAcrylicBrush(
-                      systemScheme,
-                      currentTheme
-                    ),
-                  }),
+                    colors.backgroundFillColorSolidBackgroundBase,
                   borderColor: colors.strokeColorSurfaceStrokeFlayout,
                   ...shadow,
                   ...backdropFilter,
