@@ -21,6 +21,7 @@ export const Menu = function Menu(props: MenuProps) {
     maxWidth = 350,
     minWidth = 150,
     extendToTargetWidth,
+    menuContainer: MenuContainer = View,
   } = props;
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   const layout = useRef<Layout>({
@@ -86,6 +87,7 @@ export const Menu = function Menu(props: MenuProps) {
             <ClosesMenuContext.Provider value={close}>
               <MenuContainer
                 style={{
+                  ...menuContainerStyles,
                   top: showOnTop()
                     ? layout.current.y +
                       layout.current.height +
@@ -132,13 +134,13 @@ Menu.MenuEntry = MenuEntry;
 const Container = Styled.createStyledView({});
 const TargetContainer = Styled.createStyledView({});
 
-const MenuContainer = Styled.createStyledView({
+const menuContainerStyles = {
   paddingVertical: 2,
   // borderWidth: StyleSheet.hairlineWidth,
   borderWidth: 1,
   borderRadius: 7,
   position: 'absolute',
-});
+} as const;
 
 const MenuArea = Styled.createStyledView({
   paddingHorizontal: 16,

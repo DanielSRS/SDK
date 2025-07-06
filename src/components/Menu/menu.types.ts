@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { ViewProps } from 'react-native';
+import type { ReactNode, FC } from 'react';
 
 export interface MenuProps {
   children: ReactNode;
@@ -6,6 +7,7 @@ export interface MenuProps {
   maxWidth?: number;
   minWidth?: number;
   extendToTargetWidth?: boolean;
+  menuContainer?: FC<Pick<ViewProps, 'style'>>;
 }
 
 export interface Layout {
