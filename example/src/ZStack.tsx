@@ -1,11 +1,8 @@
-import { useRef } from 'react';
-import { View } from 'react-native';
 import { Styled, ZStack } from '@danielsrs/react-native-sdk';
 
 export function ZStackS() {
-  const viewRef = useRef<View>(null);
   return (
-    <ZStack ref={viewRef}>
+    <ZStack>
       <RedSquare />
       <GreenSquare />
       <BlueSquare />
