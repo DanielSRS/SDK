@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface RootSDKViewDimensions {
+export interface RootSDKViewDimensions {
   /**
    * Root view start x position relative to window dimensions
    */
