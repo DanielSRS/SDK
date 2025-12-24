@@ -2,14 +2,16 @@ import { Memo } from '@legendapp/state/react';
 import {
   AppColorScheme$,
   Body,
-  Breakpoint$,
+  useBreakpoints$,
   ColorScheme$,
-  RootSDKViewDimensions$,
+  useRootSDKViewDimensions$,
   Styled,
   SystemColorScheme$,
 } from '@danielsrs/react-native-sdk';
 
 export function Observables() {
+  const RootSDKViewDimensions$ = useRootSDKViewDimensions$();
+  const Breakpoint$ = useBreakpoints$();
   return (
     <Container>
       <Memo>{() => <Body>Breakpoint: {Breakpoint$.get().name}</Body>}</Memo>

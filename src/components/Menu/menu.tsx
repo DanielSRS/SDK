@@ -9,6 +9,7 @@ import { ClosesMenuContext } from './components/close-menu-context';
 import { measureViewInWindow } from './menu.utils';
 import { useRootViewRef$ } from '../../hooks/useRootViewRef$';
 import type { Layout, MenuProps } from './menu.types';
+import { useRootSDKViewDimensions$ } from '../../hooks/useRootSDKViewDimensions$';
 
 /**
  * Distancia (para separar) entre o menu e target
@@ -36,13 +37,20 @@ export const Menu = function Menu(props: MenuProps) {
   const childrenContainerRef = useRef<View>(null);
   const colors = useColors();
   const rootViewRef$ = useRootViewRef$();
+  const rootSDKViewDimensions$ = useRootSDKViewDimensions$();
 
   const showOnLeft = () => layout.current.x < layout.current.ww / 2;
   const showOnTop = () => layout.current.y < layout.current.wh / 2;
 
   const measureChildrenPosition = useCallback(
-    () => measureViewInWindow(childrenContainerRef, layout, rootViewRef$),
-    [rootViewRef$]
+    () =>
+      measureViewInWindow(
+        childrenContainerRef,
+        layout,
+        rootViewRef$,
+        rootSDKViewDimensions$
+      ),
+    [rootViewRef$, rootSDKViewDimensions$]
   );
 
   const close = () => {

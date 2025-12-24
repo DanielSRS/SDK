@@ -1,4 +1,4 @@
-import React, { createContext, useRef } from 'react';
+import React, { createContext, useCallback, useRef } from 'react';
 import {
   Appearance,
   Dimensions,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
-import { observable, ObservableHint } from '@legendapp/state';
+import { ObservableHint } from '@legendapp/state';
 import { use$, useMount, useObservable } from '@legendapp/state/react';
 import { Constants } from '../../utils/constants';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
@@ -22,6 +22,7 @@ const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
 
 interface AppBackgroundContextProps {
   rootViewRef$: Observable<React.RefObject<View> | undefined>;
+  rootSDKViewDimensions$: Observable<RootSDKViewDimensions>;
 }
 export const AppBackgroundContext = createContext<AppBackgroundContextProps>(
   {} as AppBackgroundContextProps
@@ -50,9 +51,25 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const currentTheme = useColorScheme();
   const colorSchemeMismatch = currentTheme !== systemScheme;
   const rootViewRef$ = useObservable<React.RefObject<View>>();
+  const rootSDKViewDimensions$ = useObservable<RootSDKViewDimensions>({
+    ...Dimensions.get('window'),
+    x: 0,
+    y: 0,
+    left: 0,
+    top: 0,
+  });
+
   useMount(() => {
     rootViewRef$.set(ObservableHint.opaque(rootViewRef));
   });
+
+  const updateRootViewDimensions = useCallback(
+    (event: LayoutChangeEvent) => {
+      const layout = event.nativeEvent.layout;
+      rootSDKViewDimensions$.set(layout);
+    },
+    [rootSDKViewDimensions$]
+  );
   const colors = useColors();
   const backgroundColor = {
     backgroundColor:
@@ -77,7 +94,8 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const showBgColor = !(transparentBackground ?? SUPORTS_WINDOW);
 
   return (
-    <AppBackgroundContext.Provider value={{ rootViewRef$ }}>
+    <AppBackgroundContext.Provider
+      value={{ rootViewRef$, rootSDKViewDimensions$ }}>
       <View
         ref={rootViewRef}
         onLayout={updateRootViewDimensions}
@@ -118,16 +136,3 @@ interface RootSDKViewDimensions {
   left?: number;
   top?: number;
 }
-
-export const RootSDKViewDimensions$ = observable<RootSDKViewDimensions>({
-  ...Dimensions.get('window'),
-  x: 0,
-  y: 0,
-  left: 0,
-  top: 0,
-});
-
-const updateRootViewDimensions = (event: LayoutChangeEvent) => {
-  const layout = event.nativeEvent.layout;
-  RootSDKViewDimensions$.set(layout);
-};

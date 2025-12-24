@@ -1,1 +1,1 @@
-export { AppBackground, RootSDKViewDimensions$ } from './AppBackground';
+export { AppBackground } from './AppBackground';
