@@ -1,18 +1,17 @@
 import { View } from 'react-native';
-import {
-  RootSDKViewDimensions$,
-  RootViewRef$,
-} from '../AppBackground/AppBackground';
+import { RootSDKViewDimensions$ } from '../AppBackground/AppBackground';
 import type { MutableRefObject, RefObject } from 'react';
 import type { Layout } from './menu.types';
+import type { useRootViewRef$ } from '../../hooks/useRootViewRef$';
 
 export function measureViewInWindow(
   viewRef: RefObject<View>,
-  layout: MutableRefObject<Layout>
+  layout: MutableRefObject<Layout>,
+  rootViewRef$: ReturnType<typeof useRootViewRef$>
 ) {
   return new Promise<Layout>((resolve, _reject) => {
     // const i = Date.now();
-    const rootViewRef = RootViewRef$.peek()?.current;
+    const rootViewRef = rootViewRef$.peek()?.current;
     if (!rootViewRef) {
       return;
     }

@@ -7,6 +7,7 @@ import { suportsBoxShadow } from '../../utils/constants';
 import { MenuEntry } from './components/menu-entry';
 import { ClosesMenuContext } from './components/close-menu-context';
 import { measureViewInWindow } from './menu.utils';
+import { useRootViewRef$ } from '../../hooks/useRootViewRef$';
 import type { Layout, MenuProps } from './menu.types';
 
 /**
@@ -34,13 +35,14 @@ export const Menu = function Menu(props: MenuProps) {
   });
   const childrenContainerRef = useRef<View>(null);
   const colors = useColors();
+  const rootViewRef$ = useRootViewRef$();
 
   const showOnLeft = () => layout.current.x < layout.current.ww / 2;
   const showOnTop = () => layout.current.y < layout.current.wh / 2;
 
   const measureChildrenPosition = useCallback(
-    () => measureViewInWindow(childrenContainerRef, layout),
-    []
+    () => measureViewInWindow(childrenContainerRef, layout, rootViewRef$),
+    [rootViewRef$]
   );
 
   const close = () => {
