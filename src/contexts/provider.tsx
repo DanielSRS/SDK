@@ -3,6 +3,7 @@ import { ColorSchemeProvider } from './colorScheme';
 import { AppBackground } from '../components';
 import { ColorsProvider } from './colors/colors';
 import { VModalRoot } from '../components/VModal/VModal';
+import { BreakpointProvider } from './breakpoint/breakpoint';
 
 type WithoutChildren<T> = Omit<T, 'children'>;
 
@@ -26,7 +27,7 @@ export function SdkProvider(props: SdkProviderProps) {
     <ColorSchemeProvider {...colorSchemeProps}>
       <ColorsProvider {...colorsProps}>
         <AppBackground {...appBackgroundProps}>
-          {children}
+          <BreakpointProvider>{children}</BreakpointProvider>
           <VModalRoot />
         </AppBackground>
       </ColorsProvider>

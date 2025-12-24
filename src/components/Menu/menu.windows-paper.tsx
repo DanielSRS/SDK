@@ -11,7 +11,9 @@ import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import { measureViewInWindow } from './menu.utils';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useCallback, useRef, useState } from 'react';
+import { useRootViewRef$ } from '../../hooks/useRootViewRef$';
 import type { Layout, MenuProps } from './menu.types';
+import { useRootSDKViewDimensions$ } from '../../hooks/useRootSDKViewDimensions$';
 
 export const Menu = function Menu(props: MenuProps) {
   const {
@@ -35,6 +37,8 @@ export const Menu = function Menu(props: MenuProps) {
     ww: 0,
   });
   const childrenContainerRef = useRef<View>(null);
+  const rootViewRef$ = useRootViewRef$();
+  const rootSDKViewDimensions$ = useRootSDKViewDimensions$();
 
   const showOnLeft = () => layout.current.x < layout.current.ww / 2;
   const showOnTop = () => layout.current.y < layout.current.wh / 2;
@@ -45,8 +49,14 @@ export const Menu = function Menu(props: MenuProps) {
   const pointerEvents = enablePointer ? undefined : 'none';
 
   const measureChildrenPosition = useCallback(
-    () => measureViewInWindow(childrenContainerRef, layout),
-    []
+    () =>
+      measureViewInWindow(
+        childrenContainerRef,
+        layout,
+        rootViewRef$,
+        rootSDKViewDimensions$
+      ),
+    [rootViewRef$, rootSDKViewDimensions$]
   );
 
   const open = () => {

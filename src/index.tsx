@@ -19,7 +19,6 @@ export { Styled } from './components/Styled';
 export { ZStack } from './components/ZStack/ZStack';
 export { Menu } from './components/Menu/menu';
 export { Constants } from './utils/constants';
-export { RootSDKViewDimensions$ } from './components/AppBackground';
 export {
   AppColorScheme$,
   ColorScheme$,
@@ -27,12 +26,16 @@ export {
   SetColorScheme,
 } from './contexts/colorScheme/color-scheme';
 export { Colors$, setColors } from './contexts/colors/colors.values';
+export { useBreakpoints } from './hooks/useBreakpoints';
 export {
-  Breakpoint$,
-  useBreakpoints,
+  BreakpointContext,
+  BreakpointProvider,
   calculateBreakpoint,
-} from './hooks/useBreakpoints';
+} from './contexts/breakpoint/breakpoint';
+export { useBreakpoints$ } from './hooks/useBreakpoint$';
 export { RadioButton } from './components/RadioButton/radio-button';
 export { ResizableView } from './components/resizable-view';
+export { useRootViewRef$ } from './hooks/useRootViewRef$';
+export { useRootSDKViewDimensions$ } from './hooks/useRootSDKViewDimensions$';
 export * from './components/tab-view';
 export type { PropsWithCustomHook } from './types/ComponentTypes';

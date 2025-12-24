@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { createContext, useCallback, useRef } from 'react';
 import {
   Appearance,
   Dimensions,
@@ -8,18 +8,25 @@ import {
 } from 'react-native';
 import { useColorScheme } from '../../hooks/useColorSheme';
 import { useColors } from '../../hooks/useColors';
-import { observable, ObservableHint } from '@legendapp/state';
-import { use$, useMount } from '@legendapp/state/react';
+import { ObservableHint } from '@legendapp/state';
+import { use$, useMount, useObservable } from '@legendapp/state/react';
 import { Constants } from '../../utils/constants';
 import { SystemColorScheme$ } from '../../contexts/colorScheme/color-scheme';
 import { AcrylicBrush } from '../../api/acrylic-brush/acrylic-brush';
 import type { LayoutChangeEvent } from 'react-native';
+import type { Observable } from '@legendapp/state';
 
 const INITAL_COLOR_SCHEME = Appearance.getColorScheme() ?? 'light';
 
 const SUPORTS_WINDOW = Platform.OS === 'macos' || Platform.OS === 'windows';
 
-export const RootViewRef$ = observable<React.RefObject<View>>();
+interface AppBackgroundContextProps {
+  rootViewRef$: Observable<React.RefObject<View> | undefined>;
+  rootSDKViewDimensions$: Observable<RootSDKViewDimensions>;
+}
+export const AppBackgroundContext = createContext<AppBackgroundContextProps>(
+  {} as AppBackgroundContextProps
+);
 
 interface AppBackgroundProps {
   children: React.ReactNode;
@@ -43,9 +50,26 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const systemScheme = use$(SystemColorScheme$);
   const currentTheme = useColorScheme();
   const colorSchemeMismatch = currentTheme !== systemScheme;
-  useMount(() => {
-    RootViewRef$.set(ObservableHint.opaque(rootViewRef));
+  const rootViewRef$ = useObservable<React.RefObject<View>>();
+  const rootSDKViewDimensions$ = useObservable<RootSDKViewDimensions>({
+    ...Dimensions.get('window'),
+    x: 0,
+    y: 0,
+    left: 0,
+    top: 0,
   });
+
+  useMount(() => {
+    rootViewRef$.set(ObservableHint.opaque(rootViewRef));
+  });
+
+  const updateRootViewDimensions = useCallback(
+    (event: LayoutChangeEvent) => {
+      const layout = event.nativeEvent.layout;
+      rootSDKViewDimensions$.set(layout);
+    },
+    [rootSDKViewDimensions$]
+  );
   const colors = useColors();
   const backgroundColor = {
     backgroundColor:
@@ -70,16 +94,19 @@ export const AppBackground = (props: AppBackgroundProps) => {
   const showBgColor = !(transparentBackground ?? SUPORTS_WINDOW);
 
   return (
-    <View
-      ref={rootViewRef}
-      onLayout={updateRootViewDimensions}
-      style={[
-        styles.appContainer,
-        // { paddingTop: statusbarHeight },
-        showBgColor && backgroundColor,
-      ]}>
-      {children}
-    </View>
+    <AppBackgroundContext.Provider
+      value={{ rootViewRef$, rootSDKViewDimensions$ }}>
+      <View
+        ref={rootViewRef}
+        onLayout={updateRootViewDimensions}
+        style={[
+          styles.appContainer,
+          // { paddingTop: statusbarHeight },
+          showBgColor && backgroundColor,
+        ]}>
+        {children}
+      </View>
+    </AppBackgroundContext.Provider>
   );
 };
 
@@ -89,7 +116,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface RootSDKViewDimensions {
+export interface RootSDKViewDimensions {
   /**
    * Root view start x position relative to window dimensions
    */
@@ -109,16 +136,3 @@ interface RootSDKViewDimensions {
   left?: number;
   top?: number;
 }
-
-export const RootSDKViewDimensions$ = observable<RootSDKViewDimensions>({
-  ...Dimensions.get('window'),
-  x: 0,
-  y: 0,
-  left: 0,
-  top: 0,
-});
-
-const updateRootViewDimensions = (event: LayoutChangeEvent) => {
-  const layout = event.nativeEvent.layout;
-  RootSDKViewDimensions$.set(layout);
-};
