@@ -1,3 +1,5 @@
+import type { ImageData } from './ImageData';
+
 const CRC_TABLE: Array<number> = [];
 function make_crc_table() {
   var n, c, k;
@@ -141,35 +143,72 @@ function inflateStore(data: string) {
   return storeBuffer;
 }
 
-export function png(width: number, height: number, rgba: string) {
+const bt01 = new Uint8ClampedArray(1);
+bt01[0] = 0x01;
+const bt00 = new Uint8ClampedArray(1);
+bt00[0] = 0x00;
+function opt_inflateStore(data: Uint8ClampedArray) {
+  const MAX_STORE_LENGTH = 65535;
+  let storeBuffer: Uint8ClampedArray[]  = [];
+  let i;
+  let remaining;
+  let blockType: Uint8ClampedArray;
+
+  let finalBufferSize = 0;
+
+  for (i = 0; i < data.length; i += MAX_STORE_LENGTH) {
+    remaining = data.length - i;
+    // blockType = '';
+
+    if (remaining <= MAX_STORE_LENGTH) {
+      blockType = bt01;
+    } else {
+      remaining = MAX_STORE_LENGTH;
+      blockType = bt00;
+    }
+    // little-endian
+    storeBuffer.push(blockType); // mais um
+    const f = new Uint8ClampedArray([remaining & 0xff, (remaining & 0xff00) >>> 8, ~remaining & 0xff, (~remaining & 0xff00) >>> 8]);
+    storeBuffer.push(f) // mains um
+
+    const g = data.subarray(i, i + remaining);
+    storeBuffer.push(g); // mains um
+
+    finalBufferSize += f.length + 1 + g.length; // os tres anteriros
+  }
+
+  return storeBuffer;
+}
+
+export function png(width: number, height: number, image: ImageData) {
   var IHDR = createIHDR(width, height);
   var IDAT;
-  var scanlines = '';
-  var scanline;
-  var y;
-  var x;
+  // var scanlines: Uint8ClampedArray[] = [];
+  // // var scanline;
+  // var x;
   var compressedScanlines;
 
-  for (y = 0; y < rgba.length; y += width * 4) {
-    scanline = NO_FILTER;
-    if (Array.isArray(rgba)) {
-      for (x = 0; x < width * 4; x++) {
-        // eslint-disable-next-line no-bitwise
-        scanline += String.fromCharCode(rgba[y + x] & 0xff);
-      }
-    } else {
-      // rgba=string
-      scanline += rgba.substr(y, width * 4);
-    }
-    scanlines += scanline;
-  }
+  // const len = image.data.length;
+  // const stepSize = image.width * 4;
+
+  // for (let y = 0; y < len; y = y + stepSize) {
+  //   // scanline = NO_FILTER;
+  //   scanlines.push(image.data.subarray(y, y + stepSize));
+  // }
+
+  // console.log('image data: ', image.data.length);
+  // console.log('scanlines: ', scanlines.length);
+  // console.log(
+  //   `scanlines[${scanlines.length - 1}]: `,
+  //   scanlines[scanlines.length - 1]?.length
+  // );
 
   compressedScanlines =
     DEFLATE_METHOD +
-    inflateStore(scanlines) +
-    dwordAsString(adler32(scanlines));
+    inflateStore(image.data) +
+  //   dwordAsString(adler32(scanlines));
 
-  IDAT = createChunk(compressedScanlines.length, 'IDAT', compressedScanlines);
+  // IDAT = createChunk(compressedScanlines.length, 'IDAT', compressedScanlines);
 
   return SIGNATURE + IHDR + IDAT + IEND;
 }

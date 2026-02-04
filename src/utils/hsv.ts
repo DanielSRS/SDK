@@ -1,5 +1,7 @@
-import { hsv2rgb } from './hsv2rgb';
 import { interpolate } from './linearInterpolation';
+import { hsv2rgb } from './hsv2rgb';
+import { createImageData } from './ImageData';
+import type { RGB } from './hsv2rgb';
 
 /**
  * Cria uma seção no espaço de cores HSV dado um determinado valor
@@ -10,57 +12,82 @@ import { interpolate } from './linearInterpolation';
 export function createCrossSectionofHSVCylinder(radius: number, value: number) {
   const RADIUS_SQ = radius * radius;
   const diameter = 2 * radius;
-  let pngData = '';
+  const rawRGBDataLen = diameter * diameter * 4;
+  const stepSize = diameter * 4;
+  const numerOfSteps = rawRGBDataLen / stepSize;
+  let pngData = new Uint8ClampedArray(rawRGBDataLen + numerOfSteps);
   let angle;
   let alpaChannel = 255;
-  let color: {
-    r: number;
-    g: number;
-    b: number;
-  } = { b: 0, g: 0, r: 0 };
+  let color: RGB = { b: 0, g: 0, r: 0 };
   let diffX2: number;
   let diffY2: number;
   let distance: number;
+  let counter: number = -1;
+  let noFilterPng = stepSize;
+  // let step = diameter * 4;
 
-  for (let y = 0; y < diameter; y++) {
+  for (let y = 0; y < diameter; y++, noFilterPng++) {
     for (let x = 0; x < diameter; x++) {
       /** Angle in radians */
       angle = Math.atan2(radius - y, radius - x);
 
       /** Convert it to degrees */
       angle = angle * (180 / Math.PI);
+
+      /** No negative values */
       while (angle < 0) {
         angle += 360;
       }
+
+      /** No values above 360 */
       while (angle > 360) {
         angle -= 360;
       }
 
-      // color = hsv2rgb(ang, 1, 1);
       alpaChannel = 255;
 
+      /** Caculate distance from the center of the circle */
       diffX2 = (x - radius) * (x - radius);
       diffY2 = (y - radius) * (y - radius);
       distance = Math.sqrt(diffX2 + diffY2);
-      const inter = interpolate(0, radius, 0, 1, distance);
 
-      color = hsv2rgb(angle, inter, value);
-      // if (diffX2 + diffY2 < RADIUS_SQ) {
-      //   // console.log(d);
-      // }
+      /** Lower saturation when closer to the center */
+      const saturation = interpolate(0, radius, 0, 1, distance);
+
+      color = hsv2rgb(angle, saturation, value);
 
       if (diffX2 + diffY2 > RADIUS_SQ) {
+        /**
+         * If position is not withing the curcumference, make the color 100% transparent
+         */
         alpaChannel = 0;
       } else if (diffX2 + diffY2 > (radius - 1) * (radius - 1)) {
+        /**
+         * Make the borders of the image / circle smooth
+         */
         alpaChannel = Math.round(255 * (radius - distance));
       }
 
+      if (noFilterPng === stepSize) {
+        pngData[++counter] = 0;
+        noFilterPng = 0;
+      }
+
       // base64 string data
-      pngData += String.fromCharCode(color.r, color.g, color.b, alpaChannel);
+      pngData[++counter] = color.r;
+      pngData[++counter] = color.g;
+      pngData[++counter] = color.b;
+      pngData[++counter] = alpaChannel;
+
+      // pngData[counter] = color.r;
+      // pngData[counter + 1] = color.g;
+      // pngData[counter + 2] = color.b;
+      // pngData[counter + 3] = alpaChannel;
+      // counter = counter + 3;
+      // pngData += String.fromCharCode(color.r, color.g, color.b, alpaChannel);
     }
   }
-
-  return pngData;
+  return createImageData(pngData, diameter, diameter);
 }
 
 export function createCrossSectionofHSVCylinderArr(

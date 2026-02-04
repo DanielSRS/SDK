@@ -3,6 +3,7 @@
  */
 
 import { hsv2rgb } from './hsv2rgb';
+import type { RGB } from './hsv2rgb';
 
 export function createRainbowBall(radius: number, phases: number) {
   const RADIUS_SQ = radius * radius;
@@ -15,7 +16,7 @@ export function createRainbowBall(radius: number, phases: number) {
   let y;
   let x;
   let a;
-  let color;
+  let color: RGB;
   let diffX2: number;
   let diffY2: number;
   let d: number;
@@ -52,38 +53,3 @@ export function createRainbowBall(radius: number, phases: number) {
 
   return pngData;
 }
-
-function generateColorMatrix(rows: number, cols: number) {
-  const matrix = [];
-  for (let i = 0; i < rows; i++) {
-    const row = [];
-    for (let j = 0; j < cols; j++) {
-      const r = Math.floor((i / rows) * 255);
-      const g = Math.floor((j / cols) * 255);
-      const b = Math.floor(((i + j) / (rows + cols)) * 255);
-      row.push({
-        r,
-        g,
-        b,
-      });
-    }
-    matrix.push(row);
-  }
-  return matrix;
-}
-
-export const colorSqure = (width: number) => {
-  // Example usage:
-  // let startColor = [255, 0, 0, 1] as const; // Red with full opacity
-  // let endColor = [0, 0, 255, 0.5] as const; // Blue with half opacity
-  // let steps = 10;
-  // let gradient = interpolateColorsRGBA(startColor, endColor, steps);
-  let gradient = generateColorMatrix(width, width);
-  console.log(gradient.length);
-  // pngData += String.fromCharCode(color.r, color.g, color.b, a);
-
-  return gradient
-    .flat()
-    .map(color => String.fromCharCode(color.r, color.g, color.b, 255))
-    .join('');
-};
