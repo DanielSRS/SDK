@@ -1,4 +1,18 @@
-export function hsv2rgb(h: number, s: number, v: number) {
+export type RGB = {
+  r: number;
+  b: number;
+  g: number;
+};
+
+/**
+ * Converts HSV color to RGB
+ * @param h hue in degrees (0 to 359)
+ * @param s Saturation (0 to 1)
+ * @param v Value (0 to 1)
+ * @returns RGB Color
+ * @see {RGB}
+ */
+export function hsv2rgb(h: number, s: number, v: number): RGB {
   var c = v * s, // chroma
     sector = (h % 360) / 60,
     x = c * (1 - Math.abs((sector % 2) - 1)), // second largest component

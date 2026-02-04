@@ -1,3 +1,5 @@
+import type { ImageData } from './ImageData';
+
 const CRC_TABLE: Array<number> = [];
 function make_crc_table() {
   var n, c, k;
@@ -19,12 +21,12 @@ function make_crc_table() {
 }
 make_crc_table();
 
-const DEFLATE_METHOD = String.fromCharCode(0x78, 0x01);
-const SIGNATURE = String.fromCharCode(137, 80, 78, 71, 13, 10, 26, 10);
-const NO_FILTER = String.fromCharCode(0);
+const DEFLATE_METHOD = new Uint8ClampedArray([0x78, 0x01]);
+const SIGNATURE = new Uint8ClampedArray([137, 80, 78, 71, 13, 10, 26, 10]);
+// const NO_FILTER = String.fromCharCode(0);
 
 function dwordAsString(dword: number) {
-  return String.fromCharCode(
+  return new Uint8ClampedArray([
     // eslint-disable-next-line no-bitwise
     (dword & 0xff000000) >>> 24,
     // eslint-disable-next-line no-bitwise
@@ -32,11 +34,11 @@ function dwordAsString(dword: number) {
     // eslint-disable-next-line no-bitwise
     (dword & 0x0000ff00) >>> 8,
     // eslint-disable-next-line no-bitwise
-    dword & 0x000000ff
-  );
+    dword & 0x000000ff,
+  ]);
 }
 
-function update_crc(_crc: number, buf: string) {
+function update_crc(_crc: number, buf: Uint8ClampedArray) {
   if (CRC_TABLE.length === 0) {
     make_crc_table();
   }
@@ -45,7 +47,7 @@ function update_crc(_crc: number, buf: string) {
   var b: number;
 
   for (n = 0; n < buf.length; n++) {
-    b = buf.charCodeAt(n);
+    b = buf[n] as number;
     // eslint-disable-next-line no-bitwise
     const l = (c ^ b) & 0xff;
     const m = CRC_TABLE[l];
@@ -58,15 +60,49 @@ function update_crc(_crc: number, buf: string) {
   return c;
 }
 
-function crc(buf: string) {
+function update_crcARR(_crc: number, buf: Uint8ClampedArray[]) {
+  if (CRC_TABLE.length === 0) {
+    make_crc_table();
+  }
+  var c = _crc;
+  var n: number;
+  var b: number;
+
+  for (let k = 0; k < buf.length; k++) {
+    const hbuf = buf[k] as Uint8ClampedArray;
+
+    for (n = 0; n < hbuf.length; n++) {
+      b = hbuf[n] as number;
+      // eslint-disable-next-line no-bitwise
+      const l = (c ^ b) & 0xff;
+      const m = CRC_TABLE[l];
+      if (m === undefined) {
+        continue;
+      }
+      // eslint-disable-next-line no-bitwise
+      c = m ^ (c >>> 8);
+    }
+  }
+  return c;
+}
+
+function crc(buf: Uint8ClampedArray | Uint8ClampedArray[]) {
+  if (Array.isArray(buf)) {
+    // eslint-disable-next-line no-bitwise
+    return update_crcARR(0xffffffff, buf) ^ 0xffffffff;
+  }
   // eslint-disable-next-line no-bitwise
   return update_crc(0xffffffff, buf) ^ 0xffffffff;
 }
 
-function createChunk(length: number, type: string, data: string) {
-  const CRC = crc(type + data);
+function createChunk(
+  length: number,
+  type: Uint8ClampedArray,
+  data: Uint8ClampedArray
+) {
+  const CRC = crc([type, data]);
 
-  return dwordAsString(length) + type + data + dwordAsString(CRC);
+  return [dwordAsString(length), type, data, dwordAsString(CRC)];
 }
 
 function createIHDR(width: number, height: number) {
@@ -89,16 +125,25 @@ function createIHDR(width: number, height: number) {
   return createChunk(13, 'IHDR', IHDRdata);
 }
 
-const IEND = createChunk(0, 'IEND', '');
+const IEND = createChunk(
+  0,
+  new Uint8ClampedArray([
+    'IEND'.charCodeAt(0),
+    'IEND'.charCodeAt(1),
+    'IEND'.charCodeAt(2),
+    'IEND'.charCodeAt(3),
+  ]),
+  new Uint8ClampedArray(0)
+);
 
-function adler32(data: string) {
+function adler32(data: Uint8ClampedArray) {
   var MOD_ADLER = 65521,
     a = 1,
     b = 0,
     i;
 
   for (i = 0; i < data.length; i++) {
-    a = (a + data.charCodeAt(i)) % MOD_ADLER;
+    a = (a + (data[i] as number)) % MOD_ADLER;
     b = (b + a) % MOD_ADLER;
   }
 
@@ -140,36 +185,96 @@ function inflateStore(data: string) {
 
   return storeBuffer;
 }
+inflateStore;
 
-export function png(width: number, height: number, rgba: string) {
-  var IHDR = createIHDR(width, height);
-  var IDAT;
-  var scanlines = '';
-  var scanline;
-  var y;
-  var x;
-  var compressedScanlines;
+const bt01 = new Uint8ClampedArray(1);
+bt01[0] = 0x01;
+const bt00 = new Uint8ClampedArray(1);
+bt00[0] = 0x00;
+function opt_inflateStore(data: Uint8ClampedArray) {
+  const mmmm = 4; // dwordAsString return Uint8ClampedArray lenght;
+  const MAX_STORE_LENGTH = 65535;
+  let finalBufferSize = 0;
+  let storeBuffer: Uint8ClampedArray[] = [];
+  storeBuffer.push(DEFLATE_METHOD);
+  storeBuffer.push(dwordAsString(adler32(data)));
+  finalBufferSize += DEFLATE_METHOD.length;
+  finalBufferSize += mmmm;
+  let i;
+  let remaining;
+  let blockType: Uint8ClampedArray;
 
-  for (y = 0; y < rgba.length; y += width * 4) {
-    scanline = NO_FILTER;
-    if (Array.isArray(rgba)) {
-      for (x = 0; x < width * 4; x++) {
-        // eslint-disable-next-line no-bitwise
-        scanline += String.fromCharCode(rgba[y + x] & 0xff);
-      }
+  for (i = 0; i < data.length; i += MAX_STORE_LENGTH) {
+    remaining = data.length - i;
+    // blockType = '';
+
+    if (remaining <= MAX_STORE_LENGTH) {
+      blockType = bt01;
     } else {
-      // rgba=string
-      scanline += rgba.substr(y, width * 4);
+      remaining = MAX_STORE_LENGTH;
+      blockType = bt00;
     }
-    scanlines += scanline;
+    // little-endian
+    storeBuffer.push(blockType); // mais um
+    const f = new Uint8ClampedArray([
+      remaining & 0xff,
+      (remaining & 0xff00) >>> 8,
+      ~remaining & 0xff,
+      (~remaining & 0xff00) >>> 8,
+    ]);
+    storeBuffer.push(f); // mains um
+
+    const g = data.subarray(i, i + remaining);
+    storeBuffer.push(g); // mains um
+
+    finalBufferSize += f.length + 1 + g.length; // os tres anteriros
   }
 
-  compressedScanlines =
-    DEFLATE_METHOD +
-    inflateStore(scanlines) +
-    dwordAsString(adler32(scanlines));
+  const finalBuffer = new Uint8ClampedArray(finalBufferSize);
+  let written = 0;
+  storeBuffer.forEach(ui => {
+    for (let vb = 0; vb < ui.length; vb++, written++) {
+      finalBuffer[written] = ui[vb] as number;
+    }
+  });
 
-  IDAT = createChunk(compressedScanlines.length, 'IDAT', compressedScanlines);
+  return finalBuffer;
+}
 
-  return SIGNATURE + IHDR + IDAT + IEND;
+export function png(width: number, height: number, image: ImageData) {
+  var IHDR = createIHDR(width, height);
+  var IDAT;
+  // var scanlines: Uint8ClampedArray[] = [];
+  // // var scanline;
+  // var x;
+
+  // const len = image.data.length;
+  // const stepSize = image.width * 4;
+
+  // for (let y = 0; y < len; y = y + stepSize) {
+  //   // scanline = NO_FILTER;
+  //   scanlines.push(image.data.subarray(y, y + stepSize));
+  // }
+
+  // console.log('image data: ', image.data.length);
+  // console.log('scanlines: ', scanlines.length);
+  // console.log(
+  //   `scanlines[${scanlines.length - 1}]: `,
+  //   scanlines[scanlines.length - 1]?.length
+  // );
+
+  const compressedScanlines = opt_inflateStore(image.data);
+
+  IDAT = createChunk(
+    compressedScanlines.length,
+    new Uint8ClampedArray([
+      'IDAT'.charCodeAt(0),
+      'IDAT'.charCodeAt(1),
+      'IDAT'.charCodeAt(2),
+      'IDAT'.charCodeAt(3),
+    ]),
+    compressedScanlines
+  );
+
+  return [SIGNATURE, ...IHDR, ...IDAT, ...IEND];
 }

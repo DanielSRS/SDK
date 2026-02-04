@@ -3,7 +3,7 @@ import { Image, View } from 'react-native';
 import { Button } from '../components/Button';
 import { Body } from '../components/Text/Body';
 import { png } from './createPng';
-import { Base64 } from './base64';
+// import { Base64 } from './base64';
 import { useState } from 'react';
 import {
   createCrossSectionofHSVCylinder,
@@ -26,7 +26,7 @@ export function PNG() {
     const end = Date.now();
     const elapsed = end - start;
     console.log('Ended in: ', elapsed);
-    setImg(res);
+    // setImg(res);
   };
 
   return (
@@ -72,28 +72,30 @@ function test() {
   const pngFile = png(pngW, pngH, pngData);
   const a3 = Date.now();
 
-  const base64png = Base64.fromBinaryString(pngFile);
-  const a4 = Date.now();
-  dataUrl += base64png;
-  const a5 = Date.now();
+  return null;
 
-  console.log(
-    JSON.stringify(
-      {
-        pngData: a2 - a1,
-        pngFile: a3 - a2,
-        base64png: a4 - a3,
-        dataUrl: a5 - a4,
-      },
-      null,
-      2
-    )
-  );
-  return {
-    dataUrl,
-    pngW,
-    pngH,
-  };
+  // const base64png = Base64.fromBinaryString(pngFile);
+  // const a4 = Date.now();
+  // dataUrl += base64png;
+  // const a5 = Date.now();
+
+  // console.log(
+  //   JSON.stringify(
+  //     {
+  //       pngData: a2 - a1,
+  //       pngFile: a3 - a2,
+  //       base64png: a4 - a3,
+  //       dataUrl: a5 - a4,
+  //     },
+  //     null,
+  //     2
+  //   )
+  // );
+  // return {
+  //   dataUrl,
+  //   pngW,
+  //   pngH,
+  // };
 }
 
 // test bmp
