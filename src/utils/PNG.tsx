@@ -18,7 +18,7 @@ export function PNG() {
     pngH: number;
   }>();
   const generateDataPng = () => {
-    const usePng = true;
+    const usePng = false;
     console.log('started');
     const start = Date.now();
 
@@ -34,13 +34,15 @@ export function PNG() {
       style={{
         flex: 1,
         justifyContent: 'space-between',
-        // padding: 30,
+        padding: 30,
+        paddingTop: 100,
         // backgroundColor: 'black',
       }}>
       <View>
         <Body>Body</Body>
         {!!img && (
           <Image
+            fadeDuration={0}
             style={{
               width: img.pngW,
               height: img.pngH,

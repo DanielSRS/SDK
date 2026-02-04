@@ -88,8 +88,8 @@ export function createCrossSectionofHSVCylinderArr(
     for (let x = 0; x < diameter; x++) {
       // color = hsv2rgb(ang, 1, 1);
 
-      diffX2 = (x - radius) * (x - radius);
-      diffY2 = (y - radius) * (y - radius);
+      diffX2 = (x - radius) ** 2;
+      diffY2 = (y - radius) ** 2;
 
       // if (diffX2 + diffY2 < RADIUS_SQ) {
       //   // console.log(d);
@@ -167,6 +167,184 @@ export function createCrossSectionofHSVCylinderArr(
     }
   }
 }
+
+// const f = (_x: number, _y: number, diameter: number) => {
+//   if (_x < 0 || _y < 0) {
+//     console.error(
+//       `x: ${_x.toString().padStart(3, ' ')} | y: ${_y.toString().padStart(3, ' ')}`
+//     );
+//   }
+//   const k = _y * (diameter * 4);
+//   const pc = k + _x * 4;
+//   return pc;
+// };
+
+// export function _createCrossSectionofHSVCylinderArr(
+//   radius: number,
+//   value: number,
+//   buffer: Uint8ClampedArray
+// ) {
+//   const RADIUS_SQ = radius * radius;
+//   const diameter = 2 * radius;
+//   let angle = 0;
+//   // let alpaChannel = 255;
+//   // let color: {
+//   //   r: number;
+//   //   g: number;
+//   //   b: number;
+//   // } = { b: 0, g: 0, r: 0 };
+//   let diffX2: number;
+//   let diffY2: number;
+//   let distance: number;
+
+//   // const buffer = new Uint8ClampedArray(diameter * diameter * 4);
+//   let pixelCounter = -1;
+
+//   let l = 0;
+//   let v = 0;
+
+//   // -------
+//   const x_center = radius;
+//   const y_center = radius;
+//   let x = 0;
+//   let y = radius;
+//   let d = 3 - 2 * radius;
+
+//   for (let i = -x; i <= x; i++) {
+//     let pc = f(x_center + i, y_center + y, diameter);
+//     buffer[pc + 3] = 255;
+//     pc = f(x_center + i, y_center - y, diameter);
+//     buffer[pc + 3] = 255;
+//   }
+//   for (let i = -y; i <= y; i++) {
+//     let pc = f(x_center + i, y_center + x, diameter);
+//     buffer[pc + 3] = 255;
+//     pc = f(x_center + i, y_center - x, diameter);
+//     buffer[pc + 3] = 255;
+//   }
+
+//   while (y >= x) {
+//     x++;
+//     if (d > 0) {
+//       y--;
+//       d = d + 4 * (x - y) + 10;
+//     } else {
+//       d = d + 4 * x + 6;
+//     }
+//     for (let i = -x; i <= x; i++) {
+//       let pc = f(x_center + i, y_center + y, diameter);
+//       buffer[pc + 3] = 255;
+//       pc = f(x_center + i, y_center - y, diameter);
+//       buffer[pc + 3] = 255;
+//     }
+//     for (let i = -y; i <= y; i++) {
+//       let pc = f(x_center + i, y_center + x, diameter);
+//       buffer[pc + 3] = 255;
+//       pc = f(x_center + i, y_center - x, diameter);
+//       buffer[pc + 3] = 255;
+//     }
+//   }
+//   return;
+//   // for (let y = 0; y < diameter; y++) {
+//   //   const k = y * (diameter * 4);
+//   //   // if (y !== 255) {
+//   //   //   continue;
+//   //   // }
+//   //   // if (y < radius) {
+//   //   //   l = radius - y;
+//   //   //   v = radius + y;
+//   //   // } else {
+//   //   //   l = radius + y;
+//   //   //   v = radius - y;
+//   //   // }
+//   //   for (let x = 0; x < diameter; x++) {
+//   //     // if (x < l || x > v) {
+//   //     //   continue;
+//   //     // }
+//   //     // if (x > 10) {
+//   //     //   continue;
+//   //     // }
+//   //     const pc = k + x * 4;
+//   //     const r = pc;
+//   //     const g = pc + 1;
+//   //     const b = pc + 2;
+//   //     const a = pc + 3;
+//   //     // console.log('Pixel: y', y, 'x: ', x, 'pc: ', a);
+//   //     // buffer[r] = 255;
+//   //     buffer[a] = 255;
+//   //     // const pc = y * x * 4;
+//   //     // buffer[pc + 3] = 255;
+//   //   }
+//   // }
+// }
+
+// function drawSymmetricPoints(
+//   x_center: number,
+//   y_center: number,
+//   x: number,
+//   y: number,
+//   diameter: number,
+//   buffer: Uint8ClampedArray
+// ) {
+//   const f = (_x: number, _y: number) => {
+//     if (_x < 0 || _y < 0) {
+//       console.error(
+//         `x: ${_x.toString().padStart(3, ' ')} | y: ${_y.toString().padStart(3, ' ')}`
+//       );
+//     }
+//     const k = _y * (diameter * 4);
+//     const pc = k + _x * 4;
+//     return pc;
+//   };
+//   let pc = f(x_center + x, y_center + y);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center - x, y_center + y);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center + x, y_center - y);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center - x, y_center - y);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center + y, y_center + x);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center - y, y_center + x);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center + y, y_center - x);
+//   buffer[pc + 3] = 255;
+//   pc = f(x_center - y, y_center - x);
+//   buffer[pc + 3] = 255;
+// }
+
+// function getFilledSymmetricPoints(
+//   x_center: number,
+//   y_center: number,
+//   x: number,
+//   y: number,
+//   diameter: number,
+//   buffer: Uint8ClampedArray
+// ) {
+//   const f = (_x: number, _y: number) => {
+//     if (_x < 0 || _y < 0) {
+//       console.error(
+//         `x: ${_x.toString().padStart(3, ' ')} | y: ${_y.toString().padStart(3, ' ')}`
+//       );
+//     }
+//     const k = _y * (diameter * 4);
+//     const pc = k + _x * 4;
+//     return pc;
+//   };
+//   for (let i = -x; i <= x; i++) {
+//     let pc = f(x_center + i, y_center + y);
+//     buffer[pc + 3] = 255;
+//     pc = f(x_center + i, y_center - y);
+//     buffer[pc + 3] = 255;
+//   }
+//   for (let i = -y; i <= y; i++) {
+//     let pc = f(x_center + i, y_center + x);
+//     buffer[pc + 3] = 255;
+//     pc = f(x_center + i, y_center - x);
+//     buffer[pc + 3] = 255;
+//   }
+// }
 
 // return {
 //   r: Math.round((r1 + m) * 255),

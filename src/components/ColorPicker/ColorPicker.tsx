@@ -432,6 +432,45 @@ function generateColorSection() {
   };
 }
 
+// function generateColorSectionBmp() {
+//   const RADIUS = 128;
+//   const width = 2 * RADIUS;
+//   const height = 2 * RADIUS;
+//   let dataUrl = 'data:image/bmp;base64,';
+
+//   const a1 = Date.now();
+//   const pngFile = BmpImage(width, height);
+//   // const dd = String.fromCharCode.apply(null, pngData);
+//   // const dd = Uint8ToString(pngData);
+//   const a2 = Date.now();
+//   createCrossSectionofHSVCylinderArr(RADIUS, 1, pngFile.pixelArray);
+//   const a3 = Date.now();
+
+//   // const base64png = Base64.fromBinaryString(Uint8ToString(pngFile.fullData));
+//   const base64png = Base64.fromUint8Array(pngFile.data);
+//   const a4 = Date.now();
+//   dataUrl += base64png;
+//   const a5 = Date.now();
+
+//   console.log(
+//     JSON.stringify(
+//       {
+//         pngFile: a2 - a1,
+//         pngData: a3 - a2,
+//         base64png: a4 - a3,
+//         dataUrl: a5 - a4,
+//       },
+//       null,
+//       2
+//     )
+//   );
+//   return {
+//     pngDataUri: dataUrl,
+//     width,
+//     height,
+//   };
+// }
+
 function Input(props: ComponentProps<typeof TextInput>) {
   const colors = use$(Colors$);
   const sty: StyleProp<TextStyle> = {
